@@ -5,4 +5,11 @@ branches:
 projects:
   ParoxityEcon:
     path: ""
+    libs:
+    - src: ParoxityTeam/Commando/Commando
+      version: ^0.6
+    - src: poggit/libasynql/libasynql
+      version: ^3.3.0
+    lint:
+      phpstan: false
 ...
