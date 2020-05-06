@@ -1,0 +1,26 @@
+---
+# minute
+session-save-period: 5
+
+# minute
+offline-session-flush-period: 1
+
+default-money: 1000
+max-money: 50000000
+
+unit: "$"
+
+database:
+  type: sqlite
+
+  sqlite:
+    file: "data/economy.sqlite"
+
+  mysql:
+    host: "127.0.0.1"
+    username: "root"
+    password: ""
+    schema: "paroxityecon"
+
+    worker-limit: 2
+...

@@ -1,0 +1,43 @@
+name: ParoxityEcon
+main: Paroxity\ParoxityEcon\ParoxityEcon
+api: 3.0.0
+version: 1.0.0
+website: https://paroxity.net
+author: ParoxityTeam
+
+permissions:
+  paroxityecon:
+    description: Access to all perms
+    default: false
+    children:
+      paroxityecon.command:
+        description: Access to all commands
+        default: false
+        children:
+          paroxityecon.command.use:
+            description: Access to /eco command
+            default: true
+          paroxityecon.command.addmoney:
+            description: Access to /eco addmoney command
+            default: op
+          paroxityecon.command.help:
+            description: Access to /eco help command
+            default: true
+          paroxityecon.command.mymoney:
+            description: Access to /eco mymoney command
+            default: true
+          paroxityecon.command.pay:
+            description: Access to /eco pay command
+            default: true
+          paroxityecon.command.reducemoney:
+            description: Access to /eco reducemoney command
+            default: op
+          paroxityecon.command.seemoney:
+            description: Access to /eco seemoney command
+            default: true
+          paroxityecon.command.set:
+            description: Access to /eco set command
+            default: op
+          paroxityecon.command.topmoney:
+            description: Access to /eco top command
+            default: true
