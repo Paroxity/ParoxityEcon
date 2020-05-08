@@ -66,7 +66,7 @@ class ReduceMoney extends BaseSubCommand{
 				$unit = ParoxityEcon::$MONETARY_UNIT;
 
 				if($online){
-					$player->sendMessage("§6$unit" . "$money §was taken away from your account. Your new balance is §6$unit" . $finalBalance);
+					$player->sendMessage("§6$unit" . "$money §awas taken away from your account. Your new balance is §6$unit" . $finalBalance);
 				}
 
 				$sender->sendMessage("§aSuccessfully removed §4$unit" . "$money §afrom §2$username's §aaccount. His new balance is§6 $unit" . $finalBalance);

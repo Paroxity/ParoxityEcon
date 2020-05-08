@@ -26,14 +26,14 @@ VALUES (
 -- #        :username   string
 -- #        :money      float
 -- #        :max        float
-UPDATE economy SET money = MIN(money + :money, :max) WHERE username = LOWER(:username);
+UPDATE economy SET money = LEAST(money + :money, :max) WHERE username = LOWER(:username);
 -- #    }
 
 -- #    {by-uuid
 -- #        :uuid   string
 -- #        :money  float
 -- #        :max    float
-UPDATE economy SET money = MIN(money + :money, :max) WHERE uuid = :uuid;
+UPDATE economy SET money = LEAST(money + :money, :max) WHERE uuid = :uuid;
 -- #    }
 -- #  }
 
@@ -41,13 +41,13 @@ UPDATE economy SET money = MIN(money + :money, :max) WHERE uuid = :uuid;
 -- #    {by-username
 -- #        :username   string
 -- #        :money      float
-UPDATE economy SET money = MAX(money - :money, 0) WHERE username = LOWER(:username);
+UPDATE economy SET money = GREATEST(money - :money, 0) WHERE username = LOWER(:username);
 -- #    }
 
 -- #    {by-uuid
 -- #        :uuid   string
 -- #        :money  float
-UPDATE economy SET money = MAX(money - :money, 0) WHERE uuid = :uuid;
+UPDATE economy SET money = GREATEST(money - :money, 0) WHERE uuid = :uuid;
 -- #    }
 -- #  }
 
@@ -56,14 +56,14 @@ UPDATE economy SET money = MAX(money - :money, 0) WHERE uuid = :uuid;
 -- #        :username   string
 -- #        :money      float
 -- #        :max        float
-UPDATE economy SET money = MIN(:money, :max) WHERE username = LOWER(:username);
+UPDATE economy SET money = LEAST(:money, :max) WHERE username = LOWER(:username);
 -- #    }
 
 -- #    {by-uuid
 -- #        :uuid   string
 -- #        :money  float
 -- #        :max    float
-UPDATE economy SET money = MIN(:money, :max) WHERE uuid = :uuid;
+UPDATE economy SET money = LEAST(:money, :max) WHERE uuid = :uuid;
 -- #    }
 -- #  }
 

@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon;
 
+use Paroxity\ParoxityEcon\Command\ParoxityEconCommand;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use pocketmine\plugin\PluginBase;
 use function floatval;
@@ -47,7 +48,7 @@ class ParoxityEcon extends PluginBase{
 		$this->api = new ParoxityEconAPI($this);
 
 		$this->getServer()->getPluginManager()->registerEvents(new ParoxityEconListener($this), $this);
-		//$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));
+		$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));
 	}
 
 	public function onDisable(){

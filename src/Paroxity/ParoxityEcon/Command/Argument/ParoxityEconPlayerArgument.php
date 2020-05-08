@@ -16,7 +16,7 @@ class ParoxityEconPlayerArgument extends BaseArgument{
 	}
 
 	public function getTypeName(): string{
-		return "Target";
+		return "target";
 	}
 
 	public function getNetworkType(): int{

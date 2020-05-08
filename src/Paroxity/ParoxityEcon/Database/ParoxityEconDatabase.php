@@ -9,6 +9,7 @@ use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 use poggit\libasynql\SqlError;
 use function is_null;
+use function strtolower;
 
 final class ParoxityEconDatabase{
 
@@ -53,6 +54,8 @@ final class ParoxityEconDatabase{
 	 * @param string $username
 	 */
 	public function register(string $uuid, string $username): void{
+		$username = strtolower($username);
+
 		$this->connector->executeInsert(ParoxityEconQuery::REGISTER,
 			[
 				"uuid"     => $uuid,
@@ -135,6 +138,10 @@ final class ParoxityEconDatabase{
 	}
 
 	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
+		if($money < 0){
+			$money = 0;
+		}
+
 		if($isUUID){
 			$this->connector->executeChange(ParoxityEconQuery::SET_BY_UUID,
 				[

@@ -61,7 +61,7 @@ class Set extends BaseSubCommand{
 			}
 
 			if($online){
-				$player->sendMessage("§cYour money was set to§6 " . ParoxityEcon::$MONETARY_UNIT . $money);
+				$player->sendMessage("§aYour money was set to§6 " . ParoxityEcon::$MONETARY_UNIT . $money);
 			}
 
 			$sender->sendMessage("§aSuccessfully set §2$username's§a money to §6" . ParoxityEcon::$MONETARY_UNIT . $money);

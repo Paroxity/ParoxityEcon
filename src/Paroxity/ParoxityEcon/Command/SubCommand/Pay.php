@@ -90,7 +90,7 @@ class Pay extends BaseSubCommand{
 										$unit = ParoxityEcon::$MONETARY_UNIT;
 
 										if($online){
-											$player->sendMessage("§aPlayer: §2{$sender->getName()} §agave you §6$unit" . $money . "§a. Your new balance is §6$unit" . $money);
+											$player->sendMessage("§aPlayer: §2{$sender->getName()} §agave you §6$unit" . $money . "§a. Your new balance is §6$unit" . $usersBalance);
 										}
 
 										$sender->sendMessage("§aSuccessfully paid §6$unit" . "$money §ato §2$username. §aYour balance now is §6$unit" . $sendersBalance);

@@ -33,7 +33,7 @@ class TopMoney extends BaseSubCommand{
 			$i = 1;
 
 			foreach($rows as $row){
-				$playerName = $row["player"];
+				$playerName = $row["username"];
 				$money = $row["money"];
 
 				$text .= "§e$i §l§c»§r §2$playerName §l§b»§r §fwith: §6" . ParoxityEcon::$MONETARY_UNIT . $money . "\n";
