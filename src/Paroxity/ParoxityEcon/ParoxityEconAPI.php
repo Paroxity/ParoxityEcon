@@ -99,4 +99,7 @@ class ParoxityEconAPI{
 	public function getTopPlayers(string $query, callable $callable){
 		$this->db->getTopPlayers($query, $callable);
 	}
+	public function getMonetaryUnit(): string{
+		return \Paroxity\ParoxityEcon\ParoxityEcon::$MONETARY_UNIT;
+	}
 }
