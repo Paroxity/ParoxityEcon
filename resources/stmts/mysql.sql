@@ -3,36 +3,87 @@
 
 -- #  {init
 CREATE TABLE IF NOT EXISTS economy (
-  player VARCHAR(30) UNIQUE NOT NULL,
-  money INTEGER DEFAULT 0,
-  PRIMARY KEY (player)
+  uuid      VARCHAR(36) PRIMARY KEY,
+  username  VARCHAR(16),
+  money     FLOAT DEFAULT 0
 );
 -- #  }
 
--- #  {update
--- #    :player string
--- #    :money int
+-- #  {register
+-- #    :uuid       string
+-- #    :username   string
+-- #    :money      float
 INSERT INTO economy (
-  player, money
+  uuid, username, money
 )
 VALUES (
-  :player, :money
+  :uuid, :username, :money
 )
-ON DUPLICATE KEY UPDATE money = :money;
+-- #  }
+
+-- #  {add
+-- #    {by-username
+-- #        :username   string
+-- #        :money      float
+-- #        :max        float
+UPDATE economy SET money = MIN(money + :money, :max) WHERE username = LOWER(:username);
+-- #    }
+
+-- #    {by-uuid
+-- #        :uuid   string
+-- #        :money  float
+-- #        :max    float
+UPDATE economy SET money = MIN(money + :money, :max) WHERE uuid = :uuid;
+-- #    }
+-- #  }
+
+-- #  {deduct
+-- #    {by-username
+-- #        :username   string
+-- #        :money      float
+UPDATE economy SET money = MAX(money - :money, 0) WHERE username = LOWER(:username);
+-- #    }
+
+-- #    {by-uuid
+-- #        :uuid   string
+-- #        :money  float
+UPDATE economy SET money = MAX(money - :money, 0) WHERE uuid = :uuid;
+-- #    }
+-- #  }
+
+-- #  {set
+-- #    {by-username
+-- #        :username   string
+-- #        :money      float
+-- #        :max        float
+UPDATE economy SET money = MIN(:money, :max) WHERE username = LOWER(:username);
+-- #    }
+
+-- #    {by-uuid
+-- #        :uuid   string
+-- #        :money  float
+-- #        :max    float
+UPDATE economy SET money = MIN(:money, :max) WHERE uuid = :uuid;
+-- #    }
 -- #  }
 
 -- #  {get
--- #    {player
--- #      :player string
-SELECT money FROM economy WHERE player = :player;
+-- #    {by-username
+-- #      :username string
+SELECT money FROM economy WHERE username = LOWER(:username);
 -- #    }
 
--- #    {top10
-SELECT * FROM economy ORDER BY money DESC LIMIT 10;
+-- #    {by-uuid
+-- #      :uuid string
+SELECT money FROM economy WHERE uuid = :uuid;
 -- #    }
 
 -- #    {top
 SELECT * FROM economy ORDER BY money DESC;
+-- #    }
+
+-- #    {top10
+SELECT * FROM economy ORDER BY money DESC LIMIT 10;
 -- #    }
 -- #  }
 

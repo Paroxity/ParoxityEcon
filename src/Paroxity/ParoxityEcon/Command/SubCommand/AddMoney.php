@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Command\SubCommand;
 
+use CortexPE\Commando\args\FloatArgument;
 use Paroxity\ParoxityEcon\Command\Argument\ParoxityEconPlayerArgument;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Session\BaseSession;
-use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\BaseSubCommand;
 use pocketmine\command\CommandSender;
+use function floatval;
 use function is_null;
 
 class AddMoney extends BaseSubCommand{
@@ -30,45 +30,45 @@ class AddMoney extends BaseSubCommand{
 		$this->setPermission("paroxityecon.command.addmoney");
 		
 		$this->registerArgument(0, new ParoxityEconPlayerArgument());
-		$this->registerArgument(1, new IntegerArgument("money"));
+		$this->registerArgument(1, new FloatArgument("money"));
 	}
 
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
 		$engine = $this->engine;
 
 		$username = $args["player"];
-		$money = $args["money"];
+		$money = floatval($args["money"]);
 
 		if($money >= ParoxityEcon::$MAX_MONEY){
-			$sender->sendMessage("§cMoney exceeds the max-money limit.");
-
-			return;
+			$money = ParoxityEcon::$MAX_MONEY;
 		}
 
-		$found = $engine->getAPI()->getMoney($username, function(int $balance, ?BaseSession $session) use ($sender, $username, $money){
-			$finalBalance = $balance + $money;
+		$online = false;
+		$string = $username;
 
-			if($finalBalance >= ParoxityEcon::$MAX_MONEY){
-				$sender->sendMessage("§cUser balance plus the money added exceeds the max-money limit.");
+		$player = $engine->getServer()->getPlayerExact($username);
+
+		if(!is_null($player) && $player->isOnline()){
+			$online = true;
+			$string = $player->getUniqueId()->toString();
+		}
+
+		$engine->getAPI()->addMoney($string, $money, $online, function(bool $success) use ($sender, $player, $username, $string, $online, $money): void{
+			if(!$success){
+				$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
 
 				return;
 			}
 
-			$unit = ParoxityEcon::$MONETARY_UNIT;
+			$this->engine->getAPI()->getMoney($string, $online, function(?float $finalBalance) use ($sender, $player, $online, $username, $money): void{
+				$unit = ParoxityEcon::$MONETARY_UNIT;
 
-			if(is_null($session)){
-				$this->engine->getDatabase()->updateMoney($username, $finalBalance);
-			}else{
-				$session->addMoney($money);
-				$session->getPlayer()->sendMessage("§aYour were given §6$unit" . "$money.");
-			}
+				if($online){
+					$player->sendMessage("§aYour were given §6$unit" . $money . ".§aYour new balance is §6$unit" . $finalBalance);
+				}
 
-			$sender->sendMessage("§aSuccessfully added §6$unit" . "$money §ato §2$username's §aaccount. His new balance is §6$unit" . $finalBalance);
-
+				$sender->sendMessage("§aSuccessfully added §6$unit" . "$money §ato §2$username's §aaccount. His new balance is §6$unit" . $finalBalance);
+			});
 		});
-
-		if(!$found){
-			$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
-		}
 	}
 }

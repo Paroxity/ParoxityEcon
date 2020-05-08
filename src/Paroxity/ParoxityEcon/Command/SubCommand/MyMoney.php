@@ -7,7 +7,7 @@ use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\constraint\InGameRequiredConstraint;
 use Paroxity\ParoxityEcon\ParoxityEcon;
 use pocketmine\command\CommandSender;
-use function is_null;
+use pocketmine\Player;
 
 class MyMoney extends BaseSubCommand{
 
@@ -30,13 +30,12 @@ class MyMoney extends BaseSubCommand{
 		$this->addConstraint(new InGameRequiredConstraint($this));
 	}
 
+	/**
+	 * @param CommandSender|Player $sender
+	 */
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
-		$session = $this->engine->getSessionManager()->getSession($sender->getName());
-
-		if(is_null($session)){
-			throw new \RuntimeException("Player {$sender->getName()} session is null in Economy");
-		}
-
-		$sender->sendMessage("§aYour balance: §6" . ParoxityEcon::$MONETARY_UNIT . $session->getMoney());
+		$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true, function(?float $money) use ($sender): void{
+			$sender->sendMessage("§aYour §abalance is §6" . ParoxityEcon::$MONETARY_UNIT . $money);
+		});
 	}
 }

@@ -56,7 +56,7 @@ class ParoxityEconCommand extends BaseCommand{
 		if($sender instanceof Player){
 			//$sender->sendForm(new EconomyForm($this->engine)); todo
 
-			return;
+			//return;
 		}
 
 		$this->sendUsage();
