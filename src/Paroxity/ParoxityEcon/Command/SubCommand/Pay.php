@@ -78,6 +78,8 @@ class Pay extends BaseSubCommand{
 						$this->engine->getAPI()->deductMoney($sender->getUniqueId()->toString(), $money, true,
 							function(bool $success) use ($sender, $player, $username, $string, $online, $money, $sendersBalance): void{
 								if(!$success){
+									$this->engine->getAPI()->deductMoney($string, $money, $online); // remove the money that was added to targets balance
+
 									$sender->sendMessage("§cUnable to perform the transaction. Something went wrong.");
 
 									return;
