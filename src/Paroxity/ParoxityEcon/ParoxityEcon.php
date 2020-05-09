@@ -57,9 +57,9 @@ class ParoxityEcon extends PluginBase{
 		self::$DEFAULT_MONEY = floatval($this->getConfig()->get("default-money", 1000.0));
 
 		$this->database = new ParoxityEconDatabase($this);
-		$this->api = new ParoxityEconAPI($this);
+		$this->api = new ParoxityEconAPI($this, $this->database);
 
-		$this->getServer()->getPluginManager()->registerEvents(new ParoxityEconListener($this), $this);
+		$this->getServer()->getPluginManager()->registerEvents(new ParoxityEconListener($this, $this->database), $this);
 		$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));
 	}
 
@@ -67,10 +67,6 @@ class ParoxityEcon extends PluginBase{
 		self::$instance = null;
 
 		$this->database->close();
-	}
-
-	public function getDatabase(): ParoxityEconDatabase{
-		return $this->database;
 	}
 
 	public function getAPI(): ParoxityEconAPI{

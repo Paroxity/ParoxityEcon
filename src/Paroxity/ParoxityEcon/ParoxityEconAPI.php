@@ -13,11 +13,11 @@ class ParoxityEconAPI{
 	/** @var ParoxityEcon */
 	private $engine;
 	/** @var ParoxityEconDatabase */
-	private $db;
+	private $database;
 
-	public function __construct(ParoxityEcon $engine){
+	public function __construct(ParoxityEcon $engine, ParoxityEconDatabase $database){
 		$this->engine = $engine;
-		$this->db = $engine->getDatabase();
+		$this->database = $database;
 
 		self::$instance = $this;
 	}
@@ -46,7 +46,7 @@ class ParoxityEconAPI{
 	 * If money was set successfully then callable would contain true else false.
 	 */
 	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->db->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
 			$affectedRows > 0 ? $callable(true) : $callable(false);
 		});
 	}
@@ -57,7 +57,7 @@ class ParoxityEconAPI{
 	 * If money was added successfully then callable would contain true else false.
 	 */
 	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->db->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
 			$affectedRows > 0 ? $callable(true) : $callable(false);
 		});
 	}
@@ -68,7 +68,7 @@ class ParoxityEconAPI{
 	 * If money was deducted successfully then callable would contain true else false.
 	 */
 	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->db->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
 			$affectedRows > 0 ? $callable(true) : $callable(false);
 		});
 	}
@@ -79,7 +79,7 @@ class ParoxityEconAPI{
 	 * Money will be null if player is not found in db and float if he exists.
 	 */
 	public function getMoney(string $string, bool $isUUID, callable $callable): void{
-		$this->db->getMoney($string, $isUUID, function(array $rows) use ($callable): void{
+		$this->database->getMoney($string, $isUUID, function(array $rows) use ($callable): void{
 			if(empty($rows)){
 				$callable(null);
 
@@ -97,6 +97,6 @@ class ParoxityEconAPI{
 	 * callable -> function(array $rows): void{}
 	 */
 	public function getTopPlayers(string $query, callable $callable){
-		$this->db->getTopPlayers($query, $callable);
+		$this->database->getTopPlayers($query, $callable);
 	}
 }
