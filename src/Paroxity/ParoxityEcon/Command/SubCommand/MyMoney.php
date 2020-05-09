@@ -30,10 +30,12 @@ class MyMoney extends BaseSubCommand{
 		$this->addConstraint(new InGameRequiredConstraint($this));
 	}
 
-	/**
-	 * @param CommandSender|Player $sender
-	 */
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
+		// shut up phpstan and phpstorm
+		if(!$sender instanceof Player){
+			return;
+		}
+
 		$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true, function(?float $money) use ($sender): void{
 			$sender->sendMessage("§aYour §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $money);
 		});

@@ -58,7 +58,7 @@ class PayForm extends CustomForm{
 		// gets senders money and check if he has enough money
 		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true,
 			function(?float $sendersBalance) use ($sender, $username, $money): void{
-				if(is_null($money)){
+				if(is_null($sendersBalance)){
 					$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 
 					return;

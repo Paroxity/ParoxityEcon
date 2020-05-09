@@ -37,10 +37,12 @@ class Pay extends BaseSubCommand{
 		$this->registerArgument(1, new FloatArgument("money"));
 	}
 
-	/**
-	 * @param CommandSender|Player $sender
-	 */
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
+		// shut up phpstan and phpstorm
+		if(!$sender instanceof Player){
+			return;
+		}
+
 		$engine = $this->engine;
 
 		$username = $args["player"];
@@ -49,7 +51,7 @@ class Pay extends BaseSubCommand{
 		// gets senders money and check if he has enough money
 		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true,
 			function(?float $sendersBalance) use ($sender, $username, $money): void{
-				if(is_null($money)){
+				if(is_null($sendersBalance)){
 					$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 
 					return;
