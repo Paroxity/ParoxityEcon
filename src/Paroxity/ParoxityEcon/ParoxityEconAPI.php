@@ -90,7 +90,7 @@ class ParoxityEconAPI{
 	 *
 	 * callable -> function(array $rows): void{}
 	 */
-	public function getTopPlayers(string $query, callable $callable){
+	public function getTopPlayers(string $query, callable $callable): void{
 		$this->database->getTopPlayers($query, $callable);
 	}
 }

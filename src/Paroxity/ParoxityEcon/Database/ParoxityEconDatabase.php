@@ -165,7 +165,7 @@ final class ParoxityEconDatabase{
 		}
 	}
 
-	public function getMoney(string $string, bool $isUUID, callable $callable){
+	public function getMoney(string $string, bool $isUUID, callable $callable): void{
 		if($isUUID){
 			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_UUID, ["uuid" => $string], $callable);
 		}else{
@@ -180,7 +180,7 @@ final class ParoxityEconDatabase{
 	 * @param string   $query
 	 * @param callable $callable
 	 */
-	public function getTopPlayers(string $query, callable $callable){
+	public function getTopPlayers(string $query, callable $callable): void{
 		$this->connector->executeSelect($query, [], $callable);
 	}
 }
