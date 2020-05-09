@@ -57,7 +57,7 @@ class Help extends BaseSubCommand{
 		$sender->sendMessage("§6Paroxity§eEcon §aHelp Page §f[§c" . $pageNumber . "§f/§c" . count($commands) . "§f]");
 
 		foreach($commands[$pageNumber - 1] as $command){
-			$message = "§c-§r §2/" . $parent->getName() . " " . $command->getUsageMessage() . "§b:§r §f" . $command->getDescription();
+			$message = "§c-§r §2" . $command->getUsageMessage() . "§b:§r §f" . $command->getDescription();
 
 			if(!empty($command->getAliases())){
 				$message .= " (Alias: " . implode(", ", $command->getAliases()) . ")";
