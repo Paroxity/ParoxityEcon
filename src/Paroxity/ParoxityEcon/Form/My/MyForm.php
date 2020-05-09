@@ -3,34 +3,23 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Form\My;
 
-use JackMD\Forms\CustomForm\CustomForm;
-use JackMD\Forms\CustomForm\CustomFormResponse;
-use JackMD\Forms\CustomForm\element\Label;
+use dktapps\pmforms\CustomForm;
+use dktapps\pmforms\CustomFormResponse;
+use dktapps\pmforms\element\Label;
 use Paroxity\ParoxityEcon\ParoxityEcon;
 use pocketmine\Player;
 
 class MyForm extends CustomForm{
 
-	/** @var ParoxityEcon */
-	private $engine;
-
-	/** @var int */
+	/** @var float */
 	private $money;
 
-	/**
-	 * MyForm constructor.
-	 *
-	 * @param ParoxityEcon $engine
-	 * @param int           $money
-	 */
-	public function __construct(ParoxityEcon $engine, int $money){
-		$this->engine = $engine;
+	public function __construct(float $money){
 		$this->money = $money;
 
 		parent::__construct(
 			"§c§lEconomy §4UI§r",
 			$this->getFormElements(),
-
 			function(Player $player, CustomFormResponse $response): void{
 			}
 		);

@@ -5,6 +5,7 @@ namespace Paroxity\ParoxityEcon\Command;
 
 use CortexPE\Commando\BaseCommand;
 use Paroxity\ParoxityEcon\Command\SubCommand\Help;
+use Paroxity\ParoxityEcon\Form\ParoxityEconForm;
 use Paroxity\ParoxityEcon\ParoxityEcon;
 use pocketmine\command\CommandSender;
 use Paroxity\ParoxityEcon\Command\SubCommand\AddMoney;
@@ -54,9 +55,9 @@ class ParoxityEconCommand extends BaseCommand{
 
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
 		if($sender instanceof Player){
-			//$sender->sendForm(new EconomyForm($this->engine)); todo
+			$sender->sendForm(new ParoxityEconForm($this->engine));
 
-			//return;
+			return;
 		}
 
 		$this->sendUsage();

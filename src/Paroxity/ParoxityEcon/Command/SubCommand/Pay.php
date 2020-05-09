@@ -49,6 +49,12 @@ class Pay extends BaseSubCommand{
 		// gets senders money and check if he has enough money
 		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true,
 			function(?float $sendersBalance) use ($sender, $username, $money): void{
+				if(is_null($money)){
+					$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
+
+					return;
+				}
+
 				if($money > $sendersBalance){
 					$sender->sendMessage("§cYou do not have enough money to perform this transaction.");
 
@@ -69,7 +75,7 @@ class Pay extends BaseSubCommand{
 				$this->engine->getAPI()->addMoney($string, $money, $online,
 					function(bool $success) use ($sender, $username, $money, $online, $player, $string, $sendersBalance): void{
 						if(!$success){
-							$sender->sendMessage("§cUnable to perform the transaction. Something went wrong.");
+							$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
 
 							return;
 						}

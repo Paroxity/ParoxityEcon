@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Form\Pay;
 
+use dktapps\pmforms\CustomForm;
+use dktapps\pmforms\CustomFormResponse;
+use dktapps\pmforms\element\Input;
+use dktapps\pmforms\element\Label;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Session\BaseSession;
-use JackMD\Forms\CustomForm\CustomForm;
-use JackMD\Forms\CustomForm\CustomFormResponse;
-use JackMD\Forms\CustomForm\element\Input;
-use JackMD\Forms\CustomForm\element\Label;
 use pocketmine\Player;
 use function is_null;
 
@@ -16,12 +15,9 @@ class PayForm extends CustomForm{
 
 	/** @var ParoxityEcon */
 	private $engine;
-	/** @var BaseSession */
-	private $senderSession;
 
-	public function __construct(ParoxityEcon $engine, BaseSession $senderSession, array $labels = []){
+	public function __construct(ParoxityEcon $engine, array $labels = []){
 		$this->engine = $engine;
-		$this->senderSession = $senderSession;
 
 		parent::__construct(
 			"§c§lEconomy §4UI§r",
@@ -55,43 +51,73 @@ class PayForm extends CustomForm{
 		}
 
 		$engine = $this->engine;
-		$senderSession = $this->senderSession;
 
 		$username = (string) trim($data["player"]);
-		$money = (int) trim($data["money"]);
+		$money = (float) trim($data["money"]);
 
-		if($money > $senderSession->getMoney()){
-			$sender->sendForm(new self($engine, $senderSession, [new Label("err", "§c§lError§r. §cYou do not have enough money to perform this transaction.\n\n")]));
+		// gets senders money and check if he has enough money
+		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true,
+			function(?float $sendersBalance) use ($sender, $username, $money): void{
+				if(is_null($money)){
+					$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 
-			return;
-		}
+					return;
+				}
 
-		$found = $engine->getAPI()->getMoney($username, function(int $balance, ?BaseSession $session) use ($sender, $username, $money, $senderSession){
-			$finalBalance = $balance + $money;
+				if($money > $sendersBalance){
+					$sender->sendForm(new self($this->engine, [new Label("err", "§c§lError§r. §cYou do not have enough money to perform this transaction.\n\n")]));
 
-			if($finalBalance >= ParoxityEcon::getMaxMoney()){
-				$sender->sendForm(new self($this->engine, $senderSession, [new Label("err", "§c§lError§r. §cUser balance plus the money added exceeds the max-money limit.\n\n")]));
+					return;
+				}
 
-				return;
+				$online = false;
+				$string = $username;
+
+				$player = $this->engine->getServer()->getPlayerExact($username);
+
+				if(!is_null($player) && $player->isOnline()){
+					$online = true;
+					$string = $player->getUniqueId()->toString();
+				}
+
+				// add the money to the targets balance
+				$this->engine->getAPI()->addMoney($string, $money, $online,
+					function(bool $success) use ($sender, $username, $money, $online, $player, $string, $sendersBalance): void{
+						if(!$success){
+							$sender->sendForm(new self($this->engine, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
+
+							return;
+						}
+
+						// before adding to targets balance, deduct from senders first
+						$this->engine->getAPI()->deductMoney($sender->getUniqueId()->toString(), $money, true,
+							function(bool $success) use ($sender, $player, $username, $string, $online, $money, $sendersBalance): void{
+								if(!$success){
+									$this->engine->getAPI()->deductMoney($string, $money, $online); // remove the money that was added to targets balance
+
+									$sender->sendMessage("§cUnable to perform the transaction. Something went wrong.");
+
+									return;
+								}
+
+								// target balance was added and senders money was deducted. proceed...
+								// get targets updated balance
+								$this->engine->getAPI()->getMoney($string, $online,
+									function(?float $usersBalance) use ($sender, $username, $money, $online, $player, $sendersBalance): void{
+										$unit = ParoxityEcon::getMonetaryUnit();
+
+										if($online){
+											$player->sendMessage("§aPlayer: §2{$sender->getName()} §agave you §6$unit" . $money . "§a. Your new balance is §6$unit" . $usersBalance);
+										}
+
+										$sender->sendMessage("§aSuccessfully paid §6$unit" . "$money §ato §2$username. §aYour balance now is §6$unit" . $sendersBalance);
+									}
+								);
+							}
+						);
+					}
+				);
 			}
-
-			$unit = ParoxityEcon::getMonetaryUnit();
-
-			if(is_null($session)){
-				$this->engine->getDatabase()->updateMoney($username, $finalBalance);
-			}else{
-				$session->addMoney($money);
-				$session->getPlayer()->sendMessage("§aPlayer §2{$sender->getName()} §agave you §6$unit" . "$money.");
-			}
-
-			$senderSession->reduceMoney($money);
-
-			$sender->sendMessage("§aSuccessfully paid §6$unit" . "$money §ato §2$username. §aYour balance now is §6$unit" . $senderSession->getMoney());
-
-		});
-
-		if(!$found){
-			$sender->sendForm(new self($this->engine, $senderSession, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
-		}
+		);
 	}
 }

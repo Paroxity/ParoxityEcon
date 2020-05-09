@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Form\See;
 
+use dktapps\pmforms\CustomForm;
+use dktapps\pmforms\CustomFormResponse;
+use dktapps\pmforms\element\Input;
+use dktapps\pmforms\element\Label;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Session\BaseSession;
-use JackMD\Forms\CustomForm\CustomForm;
-use JackMD\Forms\CustomForm\CustomFormResponse;
-use JackMD\Forms\CustomForm\element\Input;
-use JackMD\Forms\CustomForm\element\Label;
 use pocketmine\Player;
+use function is_null;
 use function trim;
 
 class SeeForm extends CustomForm{
@@ -50,14 +50,25 @@ class SeeForm extends CustomForm{
 			return;
 		}
 
+		$online = false;
 		$username = trim($data["player"]);
+		$string = $username;
 
-		$found = $this->engine->getAPI()->getMoney($username, function(int $balance, ?BaseSession $session) use ($sender, $username){
-			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $balance);
-		});
+		$player = $this->engine->getServer()->getPlayerExact($username);
 
-		if(!$found){
-			$sender->sendForm(new self($this->engine, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
+		if(!is_null($player) && $player->isOnline()){
+			$online = true;
+			$string = $player->getUniqueId()->toString();
 		}
+
+		$this->engine->getAPI()->getMoney($string, $online, function(?float $money) use ($sender, $username): void{
+			if(is_null($money)){
+				$sender->sendForm(new self($this->engine, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
+
+				return;
+			}
+
+			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $money);
+		});
 	}
 }

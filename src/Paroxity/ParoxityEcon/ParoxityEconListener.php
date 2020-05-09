@@ -6,6 +6,7 @@ namespace Paroxity\ParoxityEcon;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use function is_null;
 
 class ParoxityEconListener implements Listener{
 
@@ -28,9 +29,9 @@ class ParoxityEconListener implements Listener{
 	public function onJoin(PlayerJoinEvent $event): void{
 		$player = $event->getPlayer();
 
-		$this->engine->getAPI()->getMoney($player->getUniqueId()->toString(), true, function(array $rows) use ($player): void{
+		$this->engine->getAPI()->getMoney($player->getUniqueId()->toString(), true, function(?float $money) use ($player): void{
 			// player exists in db
-			if(!empty($rows)){
+			if(!is_null($money)){
 				return;
 			}
 

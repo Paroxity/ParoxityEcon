@@ -3,18 +3,18 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Form;
 
+use dktapps\pmforms\MenuForm;
+use dktapps\pmforms\MenuOption;
 use Paroxity\ParoxityEcon\Form\My\MyForm;
 use Paroxity\ParoxityEcon\Form\Pay\PayForm;
 use Paroxity\ParoxityEcon\Form\See\SeeForm;
 use Paroxity\ParoxityEcon\Form\Top\TopForm;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use JackMD\Forms\MenuForm\MenuForm;
-use JackMD\Forms\MenuForm\MenuOption;
 use Paroxity\ParoxityEcon\Utils\ParoxityEconQuery;
 use pocketmine\Player;
 use function is_null;
 
-class EconomyForm extends MenuForm{
+class ParoxityEconForm extends MenuForm{
 
 	/** @var ParoxityEcon */
 	private $engine;
@@ -27,7 +27,7 @@ class EconomyForm extends MenuForm{
 			"§2Select your desired option",
 
 			$this->getOptions(),
-			function(Player $player, string $selectedOption): void{
+			function(Player $player, int $selectedOption): void{
 				$this->onSubmit($player, $selectedOption);
 			}
 		);
@@ -47,38 +47,39 @@ class EconomyForm extends MenuForm{
 		$buttons = [];
 
 		foreach($options as $title => $description){
-			$buttons[] = new MenuOption($title, "§0" . $title . "\n§0•§r §4" . $description . " §r§0•§r");
+			$buttons[] = new MenuOption("§0" . $title . "\n§0•§r §4" . $description . " §r§0•§r");
 		}
 
 		return $buttons;
 	}
 
-	public function onSubmit(Player $sender, string $selectedOption): void{
+	public function onSubmit(Player $sender, int $selectedOption): void{
 		$engine = $this->engine;
 
-		$senderName = $sender->getName();
-		$senderSession = $engine->getSessionManager()->getSession($senderName);
-
-		if(is_null($senderSession)){
-			throw new \RuntimeException("Player {$sender->getName()} session is null in Economy");
-		}
-
 		switch($selectedOption){
-			case "balance":
-				$sender->sendForm(new MyForm($engine, $senderSession->getMoney()));
+			case 0:
+				$sender->sendForm(new PayForm($engine));
 			break;
 
-			case "peek":
+			case 1:
+				$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true, function(?float $money) use ($sender): void{
+					if(is_null($money)){
+						$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
+
+						return;
+					}
+
+					$sender->sendForm(new MyForm($money));
+				});
+			break;
+
+			case 2:
 				$sender->sendForm(new SeeForm($engine));
 			break;
 
-			case "pay":
-				$sender->sendForm(new PayForm($engine, $senderSession));
-			break;
-
-			case "top":
-				$this->engine->getDatabase()->getTopPlayers(ParoxityEconQuery::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
-					$sender->sendForm(new TopForm($this->engine, $rows));
+			case 3:
+				$this->engine->getAPI()->getTopPlayers(ParoxityEconQuery::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
+					$sender->sendForm(new TopForm($rows));
 				});
 			break;
 		}
