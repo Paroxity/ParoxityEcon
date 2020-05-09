@@ -52,7 +52,7 @@ class SeeMoney extends BaseSubCommand{
 				return;
 			}
 
-			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::$MONETARY_UNIT . $money);
+			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $money);
 		});
 	}
 }

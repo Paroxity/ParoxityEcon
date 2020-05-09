@@ -89,7 +89,7 @@ class Pay extends BaseSubCommand{
 								// get targets updated balance
 								$this->engine->getAPI()->getMoney($string, $online,
 									function(?float $usersBalance) use ($sender, $username, $money, $online, $player, $sendersBalance): void{
-										$unit = ParoxityEcon::$MONETARY_UNIT;
+										$unit = ParoxityEcon::getMonetaryUnit();
 
 										if($online){
 											$player->sendMessage("§aPlayer: §2{$sender->getName()} §agave you §6$unit" . $money . "§a. Your new balance is §6$unit" . $usersBalance);

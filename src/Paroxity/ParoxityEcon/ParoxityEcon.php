@@ -14,11 +14,11 @@ class ParoxityEcon extends PluginBase{
 	private static $instance = null;
 
 	/** @var string */
-	public static $MONETARY_UNIT = "$";
+	private static $MONETARY_UNIT = "$";
 	/** @var float */
-	public static $MAX_MONEY = 50000000.0;
+	private static $MAX_MONEY = 50000000.0;
 	/** @var float */
-	public static $DEFAULT_MONEY = 1000.0;
+	private static $DEFAULT_MONEY = 1000.0;
 
 	/** @var ParoxityEconDatabase */
 	private $database;
@@ -27,6 +27,18 @@ class ParoxityEcon extends PluginBase{
 
 	public static function getInstance(): ?ParoxityEcon{
 		return self::$instance;
+	}
+
+	public static function getMonetaryUnit(): string{
+		return self::$MONETARY_UNIT;
+	}
+
+	public static function getMaxMoney(): float{
+		return self::$MAX_MONEY;
+	}
+
+	public static function getDefaultMoney(): float{
+		return self::$DEFAULT_MONEY;
 	}
 
 	public function onLoad(){

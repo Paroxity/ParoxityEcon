@@ -37,7 +37,7 @@ class TopForm extends CustomForm{
 			$playerName = $data["player"];
 			$money = $data["money"];
 
-			$text .= "§e$i §l§c»§r §2$playerName §l§b»§r §fwith: §6" . ParoxityEcon::$MONETARY_UNIT . $money . "\n";
+			$text .= "§e$i §l§c»§r §2$playerName §l§b»§r §fwith: §6" . ParoxityEcon::getMonetaryUnit() . $money . "\n";
 
 			$i++;
 		}

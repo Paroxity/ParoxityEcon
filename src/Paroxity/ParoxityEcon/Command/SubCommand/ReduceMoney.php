@@ -63,7 +63,7 @@ class ReduceMoney extends BaseSubCommand{
 			}
 
 			$this->engine->getAPI()->getMoney($string, $online, function(?float $finalBalance) use ($sender, $player, $online, $username, $money): void{
-				$unit = ParoxityEcon::$MONETARY_UNIT;
+				$unit = ParoxityEcon::getMonetaryUnit();
 
 				if($online){
 					$player->sendMessage("§6$unit" . "$money §awas taken away from your account. Your new balance is §6$unit" . $finalBalance);

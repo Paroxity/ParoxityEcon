@@ -38,7 +38,7 @@ class MyForm extends CustomForm{
 
 	private function getFormElements(): array{
 		return [
-			new Label("label", "§aYour current balance is: §6" . ParoxityEcon::$MONETARY_UNIT . $this->money)
+			new Label("label", "§aYour current balance is: §6" . ParoxityEcon::getMonetaryUnit() . $this->money)
 		];
 	}
 }

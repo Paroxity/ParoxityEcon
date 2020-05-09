@@ -53,7 +53,7 @@ class SeeForm extends CustomForm{
 		$username = trim($data["player"]);
 
 		$found = $this->engine->getAPI()->getMoney($username, function(int $balance, ?BaseSession $session) use ($sender, $username){
-			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::$MONETARY_UNIT . $balance);
+			$sender->sendMessage("§aPlayer§2 $username's §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $balance);
 		});
 
 		if(!$found){

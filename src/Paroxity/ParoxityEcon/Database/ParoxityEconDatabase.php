@@ -60,7 +60,7 @@ final class ParoxityEconDatabase{
 			[
 				"uuid"     => $uuid,
 				"username" => $username,
-				"money"    => ParoxityEcon::$DEFAULT_MONEY,
+				"money"    => ParoxityEcon::getDefaultMoney(),
 			],
 
 			function() use ($uuid, $username): void{
@@ -97,7 +97,7 @@ final class ParoxityEconDatabase{
 				[
 					"uuid"  => $string,
 					"money" => $money,
-					"max"   => ParoxityEcon::$MAX_MONEY
+					"max"   => ParoxityEcon::getMaxMoney()
 				],
 
 				$callable
@@ -107,7 +107,7 @@ final class ParoxityEconDatabase{
 				[
 					"username" => $string,
 					"money"    => $money,
-					"max"      => ParoxityEcon::$MAX_MONEY
+					"max"      => ParoxityEcon::getMaxMoney()
 				],
 
 				$callable
@@ -147,7 +147,7 @@ final class ParoxityEconDatabase{
 				[
 					"uuid"  => $string,
 					"money" => $money,
-					"max"   => ParoxityEcon::$MAX_MONEY
+					"max"   => ParoxityEcon::getMaxMoney()
 				],
 
 				$callable
@@ -157,7 +157,7 @@ final class ParoxityEconDatabase{
 				[
 					"username" => $string,
 					"money"    => $money,
-					"max"      => ParoxityEcon::$MAX_MONEY
+					"max"      => ParoxityEcon::getMaxMoney()
 				],
 
 				$callable

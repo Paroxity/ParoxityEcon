@@ -39,8 +39,8 @@ class Set extends BaseSubCommand{
 		$username = $args["player"];
 		$money = floatval($args["money"]);
 
-		if($money > ParoxityEcon::$MAX_MONEY){
-			$money = ParoxityEcon::$MAX_MONEY;
+		if($money > ParoxityEcon::getMaxMoney()){
+			$money = ParoxityEcon::getMaxMoney();
 		}
 
 		$online = false;
@@ -61,10 +61,10 @@ class Set extends BaseSubCommand{
 			}
 
 			if($online){
-				$player->sendMessage("§aYour money was set to§6 " . ParoxityEcon::$MONETARY_UNIT . $money);
+				$player->sendMessage("§aYour money was set to§6 " . ParoxityEcon::getMonetaryUnit() . $money);
 			}
 
-			$sender->sendMessage("§aSuccessfully set §2$username's§a money to §6" . ParoxityEcon::$MONETARY_UNIT . $money);
+			$sender->sendMessage("§aSuccessfully set §2$username's§a money to §6" . ParoxityEcon::getMonetaryUnit() . $money);
 		});
 	}
 }

@@ -39,8 +39,8 @@ class AddMoney extends BaseSubCommand{
 		$username = $args["player"];
 		$money = floatval($args["money"]);
 
-		if($money >= ParoxityEcon::$MAX_MONEY){
-			$money = ParoxityEcon::$MAX_MONEY;
+		if($money >= ParoxityEcon::getMaxMoney()){
+			$money = ParoxityEcon::getMaxMoney();
 		}
 
 		$online = false;
@@ -61,7 +61,7 @@ class AddMoney extends BaseSubCommand{
 			}
 
 			$this->engine->getAPI()->getMoney($string, $online, function(?float $finalBalance) use ($sender, $player, $online, $username, $money): void{
-				$unit = ParoxityEcon::$MONETARY_UNIT;
+				$unit = ParoxityEcon::getMonetaryUnit();
 
 				if($online){
 					$player->sendMessage("§aYour were given §6$unit" . $money . ".§aYour new balance is §6$unit" . $finalBalance);

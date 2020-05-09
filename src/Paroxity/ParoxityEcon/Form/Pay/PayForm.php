@@ -69,13 +69,13 @@ class PayForm extends CustomForm{
 		$found = $engine->getAPI()->getMoney($username, function(int $balance, ?BaseSession $session) use ($sender, $username, $money, $senderSession){
 			$finalBalance = $balance + $money;
 
-			if($finalBalance >= ParoxityEcon::$MAX_MONEY){
+			if($finalBalance >= ParoxityEcon::getMaxMoney()){
 				$sender->sendForm(new self($this->engine, $senderSession, [new Label("err", "§c§lError§r. §cUser balance plus the money added exceeds the max-money limit.\n\n")]));
 
 				return;
 			}
 
-			$unit = ParoxityEcon::$MONETARY_UNIT;
+			$unit = ParoxityEcon::getMonetaryUnit();
 
 			if(is_null($session)){
 				$this->engine->getDatabase()->updateMoney($username, $finalBalance);
