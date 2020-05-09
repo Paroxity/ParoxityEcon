@@ -22,7 +22,7 @@ jobs:
       - name: wget virions, Commando
         uses: wei/wget@v1
         with:
-          args: -O vendor/Commando.phar https://poggit.pmmp.io/r/84349/Commando_dev-4.phar
+          args: -O vendor/Commando.phar https://poggit.pmmp.io/r/85914/Commando_dev-6.phar
       - name: wget virions, pmforms
         uses: wei/wget@v1
         with:
