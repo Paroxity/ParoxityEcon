@@ -7,7 +7,7 @@ projects:
     path: ""
     libs:
     - src: ParoxityTeam/Commando/Commando
-      version: ^1.0.0
+      version: ^1.0.1
     - src: poggit/libasynql/libasynql
       version: ^3.3.0
     - src: dktapps-pm-pl/pmforms/pmforms
