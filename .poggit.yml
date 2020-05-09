@@ -10,6 +10,8 @@ projects:
       version: ^0.6
     - src: poggit/libasynql/libasynql
       version: ^3.3.0
+    - src: dktapps-pm-pl/pmforms/pmforms
+      version: ^1.0.0
     lint:
       phpstan: false
 ...
