@@ -15,7 +15,7 @@ final class ParoxityEconDatabase{
 
 	/** @var ParoxityEcon */
 	private $engine;
-	/** @var libasynql|DataConnector */
+	/** @var DataConnector */
 	private $connector;
 
 	public function __construct(ParoxityEcon $engine){
