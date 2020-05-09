@@ -80,13 +80,7 @@ class ParoxityEconAPI{
 	 */
 	public function getMoney(string $string, bool $isUUID, callable $callable): void{
 		$this->database->getMoney($string, $isUUID, function(array $rows) use ($callable): void{
-			if(empty($rows)){
-				$callable(null);
-
-				return;
-			}
-
-			$callable((float) $rows[0]["money"]);
+			empty($rows) ? $callable(null) : $callable((float) $rows[0]["money"]);
 		});
 	}
 
