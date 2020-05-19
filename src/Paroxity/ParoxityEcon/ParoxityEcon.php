@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon;
 
+use Paroxity\ParoxityEcon\Cache\ParoxityEconCache;
 use Paroxity\ParoxityEcon\Command\ParoxityEconCommand;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use pocketmine\plugin\PluginBase;
@@ -58,6 +59,8 @@ class ParoxityEcon extends PluginBase{
 
 		$this->database = new ParoxityEconDatabase($this);
 		$this->api = new ParoxityEconAPI($this, $this->database);
+
+		ParoxityEconCache::init($this);
 
 		$this->getServer()->getPluginManager()->registerEvents(new ParoxityEconListener($this, $this->database), $this);
 		$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon;
 
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
+use Paroxity\ParoxityEcon\Event\MoneyUpdateEvent;
 use function is_null;
 
 class ParoxityEconAPI{
@@ -47,8 +48,10 @@ class ParoxityEconAPI{
 	 * If money was set successfully then callable would contain true else false.
 	 */
 	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
+				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+
 				if(!is_null($callable)){
 					$callable(true);
 				}
@@ -68,8 +71,10 @@ class ParoxityEconAPI{
 	 * If money was added successfully then callable would contain true else false.
 	 */
 	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
+				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+
 				if(!is_null($callable)){
 					$callable(true);
 				}
@@ -89,8 +94,10 @@ class ParoxityEconAPI{
 	 * If money was deducted successfully then callable would contain true else false.
 	 */
 	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
+		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
+				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+
 				if(!is_null($callable)){
 					$callable(true);
 				}
