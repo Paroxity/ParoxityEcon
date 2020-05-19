@@ -13,7 +13,7 @@ class ParoxityEconCache{
 	/** @var Cache[] */
 	private static $cache = [];
 
-	public static function init(ParoxityEcon $engine){
+	public static function init(ParoxityEcon $engine): void{
 		self::$engine = $engine;
 	}
 
