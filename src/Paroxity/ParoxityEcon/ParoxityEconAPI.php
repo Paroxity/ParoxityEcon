@@ -79,7 +79,8 @@ class ParoxityEconAPI{
 
 			if(!is_null($callable)){
 				$callable(false);
-			}		});
+			}
+		});
 	}
 
 	/**
@@ -99,7 +100,8 @@ class ParoxityEconAPI{
 
 			if(!is_null($callable)){
 				$callable(false);
-			}		});
+			}
+		});
 	}
 
 	/**
