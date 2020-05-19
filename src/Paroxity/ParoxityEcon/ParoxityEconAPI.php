@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon;
 
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
+use function is_null;
 
 class ParoxityEconAPI{
 
@@ -47,7 +48,17 @@ class ParoxityEconAPI{
 	 */
 	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
 		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
-			$affectedRows > 0 ? $callable(true) : $callable(false);
+			if($affectedRows > 0){
+				if(!is_null($callable)){
+					$callable(true);
+				}
+
+				return;
+			}
+
+			if(!is_null($callable)){
+				$callable(false);
+			}
 		});
 	}
 
@@ -58,8 +69,17 @@ class ParoxityEconAPI{
 	 */
 	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
 		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
-			$affectedRows > 0 ? $callable(true) : $callable(false);
-		});
+			if($affectedRows > 0){
+				if(!is_null($callable)){
+					$callable(true);
+				}
+
+				return;
+			}
+
+			if(!is_null($callable)){
+				$callable(false);
+			}		});
 	}
 
 	/**
@@ -69,8 +89,17 @@ class ParoxityEconAPI{
 	 */
 	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
 		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable): void{
-			$affectedRows > 0 ? $callable(true) : $callable(false);
-		});
+			if($affectedRows > 0){
+				if(!is_null($callable)){
+					$callable(true);
+				}
+
+				return;
+			}
+
+			if(!is_null($callable)){
+				$callable(false);
+			}		});
 	}
 
 	/**
