@@ -100,7 +100,11 @@ final class ParoxityEconDatabase{
 					"max"   => ParoxityEcon::getMaxMoney()
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}else{
 			$this->connector->executeChange(ParoxityEconQuery::ADD_BY_USERNAME,
@@ -110,7 +114,11 @@ final class ParoxityEconDatabase{
 					"max"      => ParoxityEcon::getMaxMoney()
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}
 	}
@@ -123,7 +131,11 @@ final class ParoxityEconDatabase{
 					"money" => $money
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}else{
 			$this->connector->executeChange(ParoxityEconQuery::DEDUCT_BY_USERNAME,
@@ -132,7 +144,11 @@ final class ParoxityEconDatabase{
 					"money"    => $money
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}
 	}
@@ -150,7 +166,11 @@ final class ParoxityEconDatabase{
 					"max"   => ParoxityEcon::getMaxMoney()
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}else{
 			$this->connector->executeChange(ParoxityEconQuery::SET_BY_USERNAME,
@@ -160,16 +180,24 @@ final class ParoxityEconDatabase{
 					"max"      => ParoxityEcon::getMaxMoney()
 				],
 
-				$callable
+				$callable,
+
+				function() use ($callable){
+					$callable(-1);
+				}
 			);
 		}
 	}
 
 	public function getMoney(string $string, bool $isUUID, callable $callable): void{
 		if($isUUID){
-			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_UUID, ["uuid" => $string], $callable);
+			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_UUID, ["uuid" => $string], $callable, function() use ($callable){
+				$callable(-1);
+			});
 		}else{
-			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_USERNAME, ["username" => $string], $callable);
+			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_USERNAME, ["username" => $string], $callable, function() use ($callable){
+				$callable(-1);
+			});
 		}
 	}
 
@@ -181,6 +209,8 @@ final class ParoxityEconDatabase{
 	 * @param callable $callable
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
-		$this->connector->executeSelect($query, [], $callable);
+		$this->connector->executeSelect($query, [], $callable, function() use ($callable){
+			$callable(-1);
+		});
 	}
 }
