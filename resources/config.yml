@@ -1,10 +1,4 @@
 ---
-# minute
-session-save-period: 5
-
-# minute
-offline-session-flush-period: 1
-
 default-money: 1000
 max-money: 50000000
 
