@@ -4,7 +4,7 @@
 |:--:|:--:|:--:|:--:|
 |[![HitCount](http://hits.dwyl.io/ParoxityTeam/ParoxityEcon.svg)](http://hits.dwyl.io/ParoxityTeam/ParoxityEcon)|[![GitHub license](https://img.shields.io/github/license/ParoxityTeam/ParoxityEcon.svg)](https://github.com/ParoxityTeam/ParoxityEcon/blob/master/LICENSE)|[![Poggit-CI](https://poggit.pmmp.io/ci.shield/ParoxityTeam/ParoxityEcon/ParoxityEcon)](https://poggit.pmmp.io/ci/ParoxityTeam/ParoxityEcon/ParoxityEcon)|[![](https://poggit.pmmp.io/shield.state/ParoxityEcon)](https://poggit.pmmp.io/p/ParoxityEcon)|
 
-### Bringing to you first of its kind, ParoxityEcon! An Economy plugin for PocketMine-MP servers designed while keeping server networks in mind. All async!! Feel the power!
+### Bringing to you first of its kind, ParoxityEcon! An Economy plugin for PocketMine-MP servers designed while keeping server networks in mind. Feel the power!
 
 ### Features:
 
@@ -27,4 +27,4 @@
  
 ### For Developers:
 
- - Refer to [wiki](https://github.com/ParoxityTeam/ParoxityEcon/wiki).
+ - Refer to [ParoxityEconAPI](https://github.com/ParoxityTeam/ParoxityEcon/blob/master/src/Paroxity/ParoxityEcon/ParoxityEconAPI.php).
