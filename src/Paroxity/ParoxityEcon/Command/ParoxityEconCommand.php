@@ -15,9 +15,11 @@ use Paroxity\ParoxityEcon\Command\SubCommand\ReduceMoney;
 use Paroxity\ParoxityEcon\Command\SubCommand\SeeMoney;
 use Paroxity\ParoxityEcon\Command\SubCommand\Set;
 use Paroxity\ParoxityEcon\Command\SubCommand\TopMoney;
+use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
 
-class ParoxityEconCommand extends BaseCommand{
+class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableCommand{
 
 	/** @var ParoxityEcon */
 	private $engine;
@@ -61,5 +63,9 @@ class ParoxityEconCommand extends BaseCommand{
 		}
 
 		$this->sendUsage();
+	}
+
+	public function getPlugin(): Plugin{
+		return $this->engine;
 	}
 }
