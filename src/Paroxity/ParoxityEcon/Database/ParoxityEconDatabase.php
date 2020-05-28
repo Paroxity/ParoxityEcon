@@ -4,14 +4,13 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon\Database;
 
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Utils\ParoxityEconQuery;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 use poggit\libasynql\SqlError;
 use function is_null;
 use function strtolower;
 
-final class ParoxityEconDatabase{
+final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 
 	/** @var ParoxityEcon */
 	private $engine;
@@ -34,7 +33,7 @@ final class ParoxityEconDatabase{
 			]
 		);
 
-		$this->connector->executeGeneric(ParoxityEconQuery::INIT, [], function(): void{
+		$this->connector->executeGeneric(self::INIT, [], function(): void{
 			$this->engine->getLogger()->debug("Database Initialized.");
 		});
 	}
@@ -56,7 +55,7 @@ final class ParoxityEconDatabase{
 	public function register(string $uuid, string $username): void{
 		$username = strtolower($username);
 
-		$this->connector->executeInsert(ParoxityEconQuery::REGISTER,
+		$this->connector->executeInsert(self::REGISTER,
 			[
 				"uuid"     => $uuid,
 				"username" => $username,
@@ -93,7 +92,7 @@ final class ParoxityEconDatabase{
 
 	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
 		if($isUUID){
-			$this->connector->executeChange(ParoxityEconQuery::ADD_BY_UUID,
+			$this->connector->executeChange(self::ADD_BY_UUID,
 				[
 					"uuid"  => $string,
 					"money" => $money,
@@ -107,7 +106,7 @@ final class ParoxityEconDatabase{
 				}
 			);
 		}else{
-			$this->connector->executeChange(ParoxityEconQuery::ADD_BY_USERNAME,
+			$this->connector->executeChange(self::ADD_BY_USERNAME,
 				[
 					"username" => $string,
 					"money"    => $money,
@@ -125,7 +124,7 @@ final class ParoxityEconDatabase{
 
 	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
 		if($isUUID){
-			$this->connector->executeChange(ParoxityEconQuery::DEDUCT_BY_UUID,
+			$this->connector->executeChange(self::DEDUCT_BY_UUID,
 				[
 					"uuid"  => $string,
 					"money" => $money
@@ -138,7 +137,7 @@ final class ParoxityEconDatabase{
 				}
 			);
 		}else{
-			$this->connector->executeChange(ParoxityEconQuery::DEDUCT_BY_USERNAME,
+			$this->connector->executeChange(self::DEDUCT_BY_USERNAME,
 				[
 					"username" => $string,
 					"money"    => $money
@@ -159,7 +158,7 @@ final class ParoxityEconDatabase{
 		}
 
 		if($isUUID){
-			$this->connector->executeChange(ParoxityEconQuery::SET_BY_UUID,
+			$this->connector->executeChange(self::SET_BY_UUID,
 				[
 					"uuid"  => $string,
 					"money" => $money,
@@ -173,7 +172,7 @@ final class ParoxityEconDatabase{
 				}
 			);
 		}else{
-			$this->connector->executeChange(ParoxityEconQuery::SET_BY_USERNAME,
+			$this->connector->executeChange(self::SET_BY_USERNAME,
 				[
 					"username" => $string,
 					"money"    => $money,
@@ -191,19 +190,19 @@ final class ParoxityEconDatabase{
 
 	public function getMoney(string $string, bool $isUUID, callable $callable): void{
 		if($isUUID){
-			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_UUID, ["uuid" => $string], $callable, function() use ($callable){
+			$this->connector->executeSelect(self::GET_BY_UUID, ["uuid" => $string], $callable, function() use ($callable){
 				$callable(-1);
 			});
 		}else{
-			$this->connector->executeSelect(ParoxityEconQuery::GET_BY_USERNAME, ["username" => $string], $callable, function() use ($callable){
+			$this->connector->executeSelect(self::GET_BY_USERNAME, ["username" => $string], $callable, function() use ($callable){
 				$callable(-1);
 			});
 		}
 	}
 
 	/**
-	 * @see ParoxityEconQuery::GET_TOP_PLAYERS
-	 * @see ParoxityEconQuery::GET_TOP_10_PLAYERS
+	 * @see self::GET_TOP_PLAYERS
+	 * @see self::GET_TOP_10_PLAYERS
 	 *
 	 * @param string   $query
 	 * @param callable $callable

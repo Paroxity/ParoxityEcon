@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Paroxity\ParoxityEcon\Utils;
+namespace Paroxity\ParoxityEcon\Database;
 
-class ParoxityEconQuery{
+interface ParoxityEconQueryIds{
 	
 	public const INIT = "paroxityecon.init";
 	public const REGISTER = "paroxityecon.register";

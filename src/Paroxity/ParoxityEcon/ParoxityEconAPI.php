@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon;
 
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
+use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\Event\MoneyUpdateEvent;
 use function is_null;
 
@@ -123,8 +124,8 @@ class ParoxityEconAPI{
 	}
 
 	/**
-	 * @see ParoxityEconQuery::GET_TOP_PLAYERS
-	 * @see ParoxityEconQuery::GET_TOP_10_PLAYERS
+	 * @see ParoxityEconQueryIds::GET_TOP_PLAYERS
+	 * @see ParoxityEconQueryIds::GET_TOP_10_PLAYERS
 	 *
 	 * callable -> function(array $rows): void{}
 	 */

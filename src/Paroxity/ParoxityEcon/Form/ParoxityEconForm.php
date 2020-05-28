@@ -5,12 +5,12 @@ namespace Paroxity\ParoxityEcon\Form;
 
 use dktapps\pmforms\MenuForm;
 use dktapps\pmforms\MenuOption;
+use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\Form\My\MyForm;
 use Paroxity\ParoxityEcon\Form\Pay\PayForm;
 use Paroxity\ParoxityEcon\Form\See\SeeForm;
 use Paroxity\ParoxityEcon\Form\Top\TopForm;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Utils\ParoxityEconQuery;
 use pocketmine\Player;
 use function is_null;
 
@@ -78,7 +78,7 @@ class ParoxityEconForm extends MenuForm{
 			break;
 
 			case 3:
-				$this->engine->getAPI()->getTopPlayers(ParoxityEconQuery::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
+				$this->engine->getAPI()->getTopPlayers(ParoxityEconQueryIds::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
 					$sender->sendForm(new TopForm($rows));
 				});
 			break;

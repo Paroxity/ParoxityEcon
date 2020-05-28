@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon\Command\SubCommand;
 
 use CortexPE\Commando\BaseSubCommand;
+use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\ParoxityEcon;
-use Paroxity\ParoxityEcon\Utils\ParoxityEconQuery;
 use pocketmine\command\CommandSender;
 
 class TopMoney extends BaseSubCommand{
@@ -27,7 +27,7 @@ class TopMoney extends BaseSubCommand{
 	}
 
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
-		$this->engine->getAPI()->getTopPlayers(ParoxityEconQuery::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
+		$this->engine->getAPI()->getTopPlayers(ParoxityEconQueryIds::GET_TOP_10_PLAYERS, function(array $rows) use ($sender){
 			$text = "§aTop 10 players with most balance\n\n";
 
 			$i = 1;
