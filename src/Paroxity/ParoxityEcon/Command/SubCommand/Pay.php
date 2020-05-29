@@ -13,7 +13,6 @@ use pocketmine\command\CommandSender;
 use pocketmine\Player;
 use SOFe\AwaitGenerator\Await;
 use function floatval;
-use function is_null;
 
 class Pay extends BaseSubCommand{
 
@@ -53,9 +52,9 @@ class Pay extends BaseSubCommand{
 			$sendersUUID = $sender->getUniqueId()->toString();
 
 			// gets senders money and check if he has enough money
-			$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID]);
+			$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID . "c"]);
 
-			if(is_null($sendersData)){
+			if(empty($sendersData)){
 				$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 
 				return;
