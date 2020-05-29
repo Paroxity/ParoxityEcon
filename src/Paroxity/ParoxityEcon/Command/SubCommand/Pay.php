@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon\Command\SubCommand;
 
-use Core\Economy\EconomyEngine;
 use CortexPE\Commando\args\FloatArgument;
 use CortexPE\Commando\BaseSubCommand;
 use CortexPE\Commando\constraint\InGameRequiredConstraint;
@@ -81,7 +80,7 @@ class Pay extends BaseSubCommand{
 
 			$addLookup = $lookup;
 			$addLookup["money"] = $money;
-			$addLookup["max"] = EconomyEngine::getMaxMoney();
+			$addLookup["max"] = ParoxityEcon::getMaxMoney();
 
 			// add the money to the targets balance
 			$result = yield $database->asyncChange($online ? ParoxityEconQueryIds::ADD_BY_UUID : ParoxityEconQueryIds::ADD_BY_USERNAME, $addLookup);

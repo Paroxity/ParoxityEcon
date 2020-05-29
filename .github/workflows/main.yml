@@ -30,7 +30,7 @@ jobs:
       - name: wget virions, await-generator
         uses: wei/wget@v1
         with:
-          args: -O vendor/await-generator.phar https://poggit.pmmp.io/r/87185/await-generator_dev-39.phar
+          args: -O vendor/awaitgenerator.phar https://poggit.pmmp.io/r/87185/await-generator_dev-39.phar
       - name: Run PHPStan
         uses: nxtlvlsoftware/pmmp-phpstan-action@3
         with:
