@@ -53,14 +53,15 @@ class Pay extends BaseSubCommand{
 			$sendersUUID = $sender->getUniqueId()->toString();
 
 			// gets senders money and check if he has enough money
-			$sendersData = yield $database->asyncSingleSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID]);
-			$sendersBalance = $sendersData["money"];
+			$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID]);
 
-			if(is_null($sendersBalance)){
+			if(is_null($sendersData)){
 				$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 
 				return;
 			}
+
+			$sendersBalance = $sendersData[0]["money"];
 
 			if($money > $sendersBalance){
 				$sender->sendMessage("§cYou do not have enough money to perform this transaction.");
@@ -108,8 +109,8 @@ class Pay extends BaseSubCommand{
 
 			// target balance was added and senders money was deducted. proceed...
 			// get targets updated balance
-			$playersData = yield $database->asyncSingleSelect($online ? ParoxityEconQueryIds::GET_BY_UUID : ParoxityEconQueryIds::GET_BY_USERNAME, $lookup);
-			$playersBalance = $playersData["money"];
+			$playersData = yield $database->asyncSelect($online ? ParoxityEconQueryIds::GET_BY_UUID : ParoxityEconQueryIds::GET_BY_USERNAME, $lookup);
+			$playersBalance = $playersData[0]["money"];
 
 			$unit = ParoxityEcon::getMonetaryUnit();
 

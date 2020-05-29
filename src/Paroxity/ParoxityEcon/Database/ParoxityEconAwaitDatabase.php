@@ -68,12 +68,12 @@ class ParoxityEconAwaitDatabase{
 		return yield Await::ONCE;
 	}
 
-	public function asyncSingleSelect(string $queryName, array $args = []): ?Generator{
-		return (yield from $this->asyncSelect($queryName, $args))[0] ?? null;
+	public function asyncSingleSelect(string $queryName, array $args = []): Generator{
+		return (yield from $this->asyncSelect($queryName, $args))[0];
 	}
 
-	public function asyncRawSingleSelect(string $queryName, array $args = []): ?Generator{
-		return (yield from $this->asyncRawSelect($queryName, $args))[0] ?? null;
+	public function asyncRawSingleSelect(string $queryName, array $args = []): Generator{
+		return (yield from $this->asyncRawSelect($queryName, $args))[0];
 	}
 
 	public function asyncSelect(string $queryName, array $args = []): Generator{
@@ -82,7 +82,7 @@ class ParoxityEconAwaitDatabase{
 		return yield Await::ONCE;
 	}
 
-	public function asyncRawSelect(string $queryName, array $args = []): ?Generator{
+	public function asyncRawSelect(string $queryName, array $args = []): Generator{
 		$this->connector->executeSelectRaw($queryName, $args, yield, yield Await::REJECT);
 
 		return yield Await::ONCE;
