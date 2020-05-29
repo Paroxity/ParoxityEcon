@@ -17,7 +17,6 @@ use Paroxity\ParoxityEcon\Command\SubCommand\Set;
 use Paroxity\ParoxityEcon\Command\SubCommand\TopMoney;
 use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\Player;
-use pocketmine\plugin\Plugin;
 
 class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableCommand{
 
@@ -28,6 +27,7 @@ class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableComma
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"eco",
 			"Access to servers economy.",
 			["economy"]
@@ -63,9 +63,5 @@ class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableComma
 		}
 
 		$this->sendUsage();
-	}
-
-	public function getPlugin(): Plugin{
-		return $this->engine;
 	}
 }
