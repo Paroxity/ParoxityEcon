@@ -6,9 +6,19 @@ namespace Paroxity\ParoxityEcon;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\Event\MoneyUpdateEvent;
+use pocketmine\utils\Utils;
+use SOFe\AwaitGenerator\Await;
 use function is_null;
+use function strtolower;
 
 class ParoxityEconAPI{
+
+	public const TRANSACTION_SUCCESSFUL = 0;
+
+	public const ERROR_CAUSE_UNKNOWN         = 1;
+	public const ERROR_SENDER_NOT_FOUND      = 2;
+	public const ERROR_SENDER_LOW_ON_BALANCE = 3;
+	public const ERROR_RECEIVER_NOT_FOUND    = 4;
 
 	/** @var self|null */
 	private static $instance = null;
@@ -131,5 +141,119 @@ class ParoxityEconAPI{
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
 		$this->database->getTopPlayers($query, $callable);
+	}
+
+	/**
+	 * $callable -> function(bool $success, ?float $sendersBalance, ?float $receiversBalance, int $errorCode): void{}
+	 *
+	 * Error Codes:
+	 *
+	 * @see ParoxityEconAPI::ERROR_CAUSE_UNKNOWN
+	 * @see ParoxityEconAPI::ERROR_SENDER_NOT_FOUND
+	 * @see ParoxityEconAPI::ERROR_SENDER_LOW_ON_BALANCE
+	 * @see ParoxityEconAPI::ERROR_RECEIVER_NOT_FOUND
+	 *
+	 * The error code will be equal to ParoxityEconAPI::TRANSACTION_SUCCESSFUL if
+	 * everything was executed successfully.
+	 *
+	 * @see ParoxityEconAPI::TRANSACTION_SUCCESSFUL
+	 */
+	public function pay(string $sendersName, string $receiversName, float $money, ?callable $callback = null): void{
+		$sendersName = strtolower($sendersName);
+		$receiversName = strtolower($receiversName);
+
+		Await::f2c(
+			function() use ($sendersName, $receiversName, $money){
+				$return = [
+					"error_code" => -1,
+					"data"       => []
+				];
+
+				$engine = $this->engine;
+				$database = $engine->getDatabase();
+
+				// gets senders money and check if he has enough money
+				$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, ["username" => $sendersName]);
+
+				if(empty($sendersData)){
+					$return["error_code"] = self::ERROR_SENDER_NOT_FOUND;
+
+					return $return;
+				}
+
+				$sendersBalance = $sendersData[0]["money"];
+
+				if($money > $sendersBalance){
+					$return["error_code"] = self::ERROR_SENDER_LOW_ON_BALANCE;
+
+					return $return;
+				}
+
+				$lookup = [
+					"username" => $receiversName,
+					"money"    => $money,
+					"max"      => ParoxityEcon::getMaxMoney()
+				];
+
+				// add the money to the targets balance
+				$result = yield $database->asyncChange(ParoxityEconQueryIds::ADD_BY_USERNAME, $lookup);
+
+				if($result === 0){
+					$return["error_code"] = self::ERROR_RECEIVER_NOT_FOUND;
+
+					return $return;
+				}
+
+				// before adding to targets balance, deduct from senders first
+				$result = yield $database->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, ["username" => $sendersName, "money" => $money]);
+
+				if($result === 0){
+					// remove the money that was added to targets balance
+					yield $database->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, $lookup);
+					$return["error_code"] = self::ERROR_CAUSE_UNKNOWN;
+
+					return $return;
+				}
+
+				// target balance was added and senders money was deducted. proceed...
+				// get targets updated balance
+				$receiversData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, $lookup);
+				$receiversBalance = $receiversData[0]["money"];
+				$sendersBalance = $sendersBalance - $money;
+
+				$return = [
+					"data" => [
+						"senders_balance"   => $sendersBalance,
+						"receivers_balance" => $receiversBalance
+					]
+				];
+
+				return $return;
+			},
+
+			function(array $data) use ($callback){
+				if(is_null($callback)){
+					return;
+				}
+
+				Utils::validateCallableSignature(
+					function(bool $success, ?float $sendersBalance, ?float $receiversBalance, int $errorCode): void{},
+					$callback
+				);
+
+				// callback function signature
+				// bool success, ?float sender bal, ?float receivers bal, int error code
+
+				if(isset($data["error_code"])){
+					$callback(false, null, null, (int) $data["error_code"]);
+
+					return;
+				}
+
+				$data = $data["data"];
+
+				$callback(true, (float) $data["senders_balance"], (float) $data["receivers_balance"], self::TRANSACTION_SUCCESSFUL);
+			}
+		);
 	}
 }
