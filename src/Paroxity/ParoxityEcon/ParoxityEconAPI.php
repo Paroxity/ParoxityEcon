@@ -232,7 +232,7 @@ class ParoxityEconAPI{
 				return $return;
 			},
 
-			function($data) use ($callback){
+			function($data) use ($callback): void{
 				if(is_null($callback)){
 					return;
 				}
