@@ -64,6 +64,10 @@ class ParoxityEcon extends PluginBase{
 		$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));
 	}
 
+	public function getDatabase(): ParoxityEconDatabase{
+		return $this->database;
+	}
+
 	public function onDisable(){
 		self::$instance = null;
 
