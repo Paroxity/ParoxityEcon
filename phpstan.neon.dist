@@ -9,6 +9,7 @@ parameters:
     - phar:///source/vendor/libasynql.phar/src/
     - phar:///source/vendor/Commando.phar/src/
     - phar:///source/vendor/pmforms.phar/src/
+    - phar:///source/vendor/awaitgenerator.phar/src/
   excludes_analyse:
     - /source/vendor
   reportUnmatchedIgnoredErrors: false
