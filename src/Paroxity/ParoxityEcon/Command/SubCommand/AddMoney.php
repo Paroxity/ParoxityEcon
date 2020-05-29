@@ -20,6 +20,7 @@ class AddMoney extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"add",
 			"Add money to a players balance",
 			["give"]

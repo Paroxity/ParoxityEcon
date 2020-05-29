@@ -24,6 +24,7 @@ class Pay extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"pay",
 			"Give money to a player."
 		);

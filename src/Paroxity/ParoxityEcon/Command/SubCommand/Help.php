@@ -5,13 +5,15 @@ namespace Paroxity\ParoxityEcon\Command\SubCommand;
 
 use CortexPE\Commando\args\IntegerArgument;
 use CortexPE\Commando\BaseSubCommand;
+use Paroxity\ParoxityEcon\ParoxityEcon;
 use pocketmine\command\CommandSender;
 use function implode;
 
 class Help extends BaseSubCommand{
 
-	public function __construct(){
+	public function __construct(ParoxityEcon $engine){
 		parent::__construct(
+			$engine,
 			"help",
 			"Access to ParoxityEcon help page."
 		);

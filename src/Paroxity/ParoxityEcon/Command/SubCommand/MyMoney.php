@@ -18,6 +18,7 @@ class MyMoney extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"my",
 			"See your current balance.",
 			["mymoney"]

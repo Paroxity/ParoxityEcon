@@ -47,7 +47,7 @@ class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableComma
 			new ReduceMoney($engine),
 			new SeeMoney($engine),
 			new TopMoney($engine),
-			new Help()
+			new Help($engine)
 		];
 
 		foreach($subCommands as $subCommand){

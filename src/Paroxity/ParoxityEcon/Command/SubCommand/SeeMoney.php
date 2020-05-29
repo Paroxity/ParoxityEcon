@@ -18,6 +18,7 @@ class SeeMoney extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"see",
 			"Check a players balance.",
 			["peek"]

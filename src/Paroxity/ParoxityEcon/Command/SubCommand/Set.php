@@ -20,6 +20,7 @@ class Set extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"set",
 			"Set money of a player.",
 			["setmoney"]

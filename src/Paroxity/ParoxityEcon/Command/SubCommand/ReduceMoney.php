@@ -20,6 +20,7 @@ class ReduceMoney extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"reduce",
 			"Take money from players balance.",
 			["take"]

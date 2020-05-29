@@ -17,6 +17,7 @@ class TopMoney extends BaseSubCommand{
 		$this->engine = $engine;
 
 		parent::__construct(
+			$engine,
 			"top",
 			"See top 10 players with most money."
 		);
