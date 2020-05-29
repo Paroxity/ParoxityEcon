@@ -8,6 +8,7 @@ use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\Event\MoneyUpdateEvent;
 use pocketmine\utils\Utils;
 use SOFe\AwaitGenerator\Await;
+use function is_array;
 use function is_null;
 use function strtolower;
 
@@ -231,7 +232,7 @@ class ParoxityEconAPI{
 				return $return;
 			},
 
-			function(array $data) use ($callback){
+			function($data) use ($callback){
 				if(is_null($callback)){
 					return;
 				}
@@ -243,6 +244,12 @@ class ParoxityEconAPI{
 
 				// callback function signature
 				// bool success, ?float sender bal, ?float receivers bal, int error code
+
+				if(!is_array($data)){
+					$callback(false, null, null, self::ERROR_CAUSE_UNKNOWN);
+
+					return;
+				}
 
 				if(isset($data["error_code"])){
 					$callback(false, null, null, (int) $data["error_code"]);
