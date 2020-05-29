@@ -10,20 +10,16 @@ use poggit\libasynql\SqlError;
 use function is_null;
 use function strtolower;
 
-final class ParoxityEconDatabase implements ParoxityEconQueryIds{
+final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements ParoxityEconQueryIds{
 
 	/** @var ParoxityEcon */
 	private $engine;
 	/** @var DataConnector */
-	private $connector;
+	protected $connector;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;
 
-		$this->initDatabase();
-	}
-
-	private function initDatabase(): void{
 		$this->connector = libasynql::create(
 			$this->engine,
 			$this->engine->getConfig()->get("database"),
@@ -33,13 +29,12 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			]
 		);
 
-		$this->connector->executeGeneric(self::INIT, [], function(): void{
-			$this->engine->getLogger()->debug("Database Initialized.");
-		});
-	}
+		$this->connector->executeGeneric(self::INIT);
+		$this->connector->waitAll(); // just to be sure, also waiting on startup isn't a big deal
 
-	public function getConnector(): DataConnector{
-		return $this->connector;
+		$this->engine->getLogger()->debug("Database Initialized.");
+
+		parent::__construct($this->connector);
 	}
 
 	public function close(): void{
