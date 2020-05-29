@@ -52,7 +52,7 @@ class Pay extends BaseSubCommand{
 			$sendersUUID = $sender->getUniqueId()->toString();
 
 			// gets senders money and check if he has enough money
-			$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID . "c"]);
+			$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_UUID, ["uuid" => $sendersUUID]);
 
 			if(empty($sendersData)){
 				$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
