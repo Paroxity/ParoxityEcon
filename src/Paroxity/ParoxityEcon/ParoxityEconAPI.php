@@ -222,6 +222,10 @@ class ParoxityEconAPI{
 				$receiversBalance = $receiversData[0]["money"];
 				$sendersBalance = $sendersBalance - $money;
 
+				// call the events for both the players, serves to update the cache as well
+				(new MoneyUpdateEvent($this->engine, $sendersName, false))->call();
+				(new MoneyUpdateEvent($this->engine, $receiversName, false))->call();
+
 				$return = [
 					"data" => [
 						"senders_balance"   => $sendersBalance,
