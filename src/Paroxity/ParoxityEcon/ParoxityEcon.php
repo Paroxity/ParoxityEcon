@@ -68,13 +68,13 @@ class ParoxityEcon extends PluginBase{
 		return $this->database;
 	}
 
+	public function getAPI(): ParoxityEconAPI{
+		return $this->api;
+	}
+
 	public function onDisable(){
 		self::$instance = null;
 
 		$this->database->close();
-	}
-
-	public function getAPI(): ParoxityEconAPI{
-		return $this->api;
 	}
 }
