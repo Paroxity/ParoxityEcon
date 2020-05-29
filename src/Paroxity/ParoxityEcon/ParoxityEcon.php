@@ -50,8 +50,6 @@ class ParoxityEcon extends PluginBase{
 		$this->saveDefaultConfig();
 
 		$this->saveResource("data/dummy.txt");
-		$this->saveResource("stmts/sqlite.sql", true);
-		$this->saveResource("stmts/mysql.sql", true);
 
 		self::$MONETARY_UNIT = $this->getConfig()->get("unit", "$");
 		self::$MAX_MONEY = floatval($this->getConfig()->get("max-money", 50000000.0));
