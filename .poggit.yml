@@ -12,7 +12,7 @@ projects:
       version: ^3.3.0
     - src: dktapps-pm-pl/pmforms/pmforms
       version: ^1.0.0
-    - src: await-generator/SOFe/AwaitGenerator/AwaitGenerator
+    - src: SOF3/await-generator/await-generator
       version: ^3.0.0
     lint:
       phpstan: false
