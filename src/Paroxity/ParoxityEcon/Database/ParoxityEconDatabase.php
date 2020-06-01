@@ -186,11 +186,11 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 	public function getMoney(string $string, bool $isUUID, callable $callable): void{
 		if($isUUID){
 			$this->connector->executeSelect(self::GET_BY_UUID, ["uuid" => $string], $callable, function() use ($callable){
-				$callable(-1);
+				$callable([]);
 			});
 		}else{
 			$this->connector->executeSelect(self::GET_BY_USERNAME, ["username" => $string], $callable, function() use ($callable){
-				$callable(-1);
+				$callable([]);
 			});
 		}
 	}
@@ -204,7 +204,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
 		$this->connector->executeSelect($query, [], $callable, function() use ($callable){
-			$callable(-1);
+			$callable([]);
 		});
 	}
 }
