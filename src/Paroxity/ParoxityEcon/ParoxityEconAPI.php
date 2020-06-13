@@ -63,16 +63,10 @@ class ParoxityEconAPI{
 		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
 				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
-
-				if(!is_null($callable)){
-					$callable(true);
-				}
-
-				return;
 			}
 
 			if(!is_null($callable)){
-				$callable(false);
+				$callable($affectedRows > 0);
 			}
 		});
 	}
@@ -86,16 +80,10 @@ class ParoxityEconAPI{
 		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
 				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
-
-				if(!is_null($callable)){
-					$callable(true);
-				}
-
-				return;
 			}
 
 			if(!is_null($callable)){
-				$callable(false);
+				$callable($affectedRows > 0);
 			}
 		});
 	}
@@ -109,16 +97,10 @@ class ParoxityEconAPI{
 		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
 			if($affectedRows > 0){
 				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
-
-				if(!is_null($callable)){
-					$callable(true);
-				}
-
-				return;
 			}
 
 			if(!is_null($callable)){
-				$callable(false);
+				$callable($affectedRows > 0);
 			}
 		});
 	}
