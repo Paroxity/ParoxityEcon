@@ -37,7 +37,7 @@ class MyMoney extends BaseSubCommand{
 			return;
 		}
 
-		$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true, function(?float $money) use ($sender): void{
+		$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), function(?float $money) use ($sender): void{
 			$sender->sendMessage("§aYour §abalance is §6" . ParoxityEcon::getMonetaryUnit() . $money);
 		});
 	}

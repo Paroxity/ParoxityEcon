@@ -56,7 +56,7 @@ class PayForm extends CustomForm{
 		$money = (float) trim($data["money"]);
 
 		// gets senders money and check if he has enough money
-		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true,
+		$engine->getAPI()->getMoney($sender->getUniqueId()->toString(),
 			function(?float $sendersBalance) use ($sender, $username, $money): void{
 				if(is_null($sendersBalance)){
 					$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
@@ -81,7 +81,7 @@ class PayForm extends CustomForm{
 				}
 
 				// add the money to the targets balance
-				$this->engine->getAPI()->addMoney($string, $money, $online,
+				$this->engine->getAPI()->addMoney($string, $money,
 					function(bool $success) use ($sender, $username, $money, $online, $player, $string, $sendersBalance): void{
 						if(!$success){
 							$sender->sendForm(new self($this->engine, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
@@ -90,10 +90,10 @@ class PayForm extends CustomForm{
 						}
 
 						// before adding to targets balance, deduct from senders first
-						$this->engine->getAPI()->deductMoney($sender->getUniqueId()->toString(), $money, true,
+						$this->engine->getAPI()->deductMoney($sender->getUniqueId()->toString(), $money,
 							function(bool $success) use ($sender, $player, $username, $string, $online, $money, $sendersBalance): void{
 								if(!$success){
-									$this->engine->getAPI()->deductMoney($string, $money, $online); // remove the money that was added to targets balance
+									$this->engine->getAPI()->deductMoney($string, $money); // remove the money that was added to targets balance
 
 									$sender->sendMessage("§cUnable to perform the transaction. Something went wrong.");
 
@@ -102,7 +102,7 @@ class PayForm extends CustomForm{
 
 								// target balance was added and senders money was deducted. proceed...
 								// get targets updated balance
-								$this->engine->getAPI()->getMoney($string, $online,
+								$this->engine->getAPI()->getMoney($string,
 									function(?float $usersBalance) use ($sender, $username, $money, $online, $player, $sendersBalance): void{
 										$unit = ParoxityEcon::getMonetaryUnit();
 

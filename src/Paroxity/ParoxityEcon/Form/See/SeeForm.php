@@ -50,18 +50,14 @@ class SeeForm extends CustomForm{
 			return;
 		}
 
-		$online = false;
-		$username = trim($data["player"]);
-		$string = $username;
-
+		$string = $username = trim($data["player"]);
 		$player = $this->engine->getServer()->getPlayerExact($username);
 
 		if(!is_null($player) && $player->isOnline()){
-			$online = true;
 			$string = $player->getUniqueId()->toString();
 		}
 
-		$this->engine->getAPI()->getMoney($string, $online, function(?float $money) use ($sender, $username): void{
+		$this->engine->getAPI()->getMoney($string, function(?float $money) use ($sender, $username): void{
 			if(is_null($money)){
 				$sender->sendForm(new self($this->engine, [new Label("error", "§c§lError§r§c. Player:§4 $username §ccould not be found.\n\n")]));
 

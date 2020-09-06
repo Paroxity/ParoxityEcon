@@ -35,18 +35,14 @@ class SeeMoney extends BaseSubCommand{
 	public function onRun(CommandSender $sender, string $alias, array $args): void{
 		$engine = $this->engine;
 
-		$online = false;
-		$username = $args["player"];
-		$string = $username;
-
+		$string = $username = $args["player"];
 		$player = $engine->getServer()->getPlayerExact($username);
 
 		if(!is_null($player) && $player->isOnline()){
-			$online = true;
 			$string = $player->getUniqueId()->toString();
 		}
 
-		$engine->getAPI()->getMoney($string, $online, function(?float $money) use ($sender, $username): void{
+		$engine->getAPI()->getMoney($string, function(?float $money) use ($sender, $username): void{
 			if(is_null($money)){
 				$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
 

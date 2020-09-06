@@ -54,7 +54,7 @@ class Set extends BaseSubCommand{
 			$string = $player->getUniqueId()->toString();
 		}
 
-		$engine->getAPI()->setMoney($string, $money, $online, function(bool $success) use ($sender, $player, $username, $online, $money): void{
+		$engine->getAPI()->setMoney($string, $money, function(bool $success) use ($sender, $player, $username, $online, $money): void{
 			if(!$success){
 				$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
 

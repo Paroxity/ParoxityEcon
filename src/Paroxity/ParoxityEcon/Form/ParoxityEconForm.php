@@ -62,7 +62,7 @@ class ParoxityEconForm extends MenuForm{
 			break;
 
 			case 1:
-				$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), true, function(?float $money) use ($sender): void{
+				$this->engine->getAPI()->getMoney($sender->getUniqueId()->toString(), function(?float $money) use ($sender): void{
 					if(is_null($money)){
 						$sender->sendMessage("§cSomething went wrong. Unable to get your money.");
 

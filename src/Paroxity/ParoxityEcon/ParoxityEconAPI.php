@@ -59,10 +59,10 @@ class ParoxityEconAPI{
 	 *
 	 * If money was set successfully then callable would contain true else false.
 	 */
-	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->setMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
+	public function setMoney(string $string, float $money, ?callable $callable = null): void{
+		$this->database->setMoney($string, $money, function(int $affectedRows) use ($callable, $string): void{
 			if($affectedRows > 0){
-				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+				(new MoneyUpdateEvent($this->engine, $string))->call();
 			}
 
 			if(!is_null($callable)){
@@ -76,10 +76,10 @@ class ParoxityEconAPI{
 	 *
 	 * If money was added successfully then callable would contain true else false.
 	 */
-	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->addMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
+	public function addMoney(string $string, float $money, ?callable $callable = null): void{
+		$this->database->addMoney($string, $money, function(int $affectedRows) use ($callable, $string): void{
 			if($affectedRows > 0){
-				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+				(new MoneyUpdateEvent($this->engine, $string))->call();
 			}
 
 			if(!is_null($callable)){
@@ -93,10 +93,10 @@ class ParoxityEconAPI{
 	 *
 	 * If money was deducted successfully then callable would contain true else false.
 	 */
-	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		$this->database->deductMoney($string, $money, $isUUID, function(int $affectedRows) use ($callable, $string, $isUUID): void{
+	public function deductMoney(string $string, float $money, ?callable $callable = null): void{
+		$this->database->deductMoney($string, $money, function(int $affectedRows) use ($callable, $string): void{
 			if($affectedRows > 0){
-				(new MoneyUpdateEvent($this->engine, $string, $isUUID))->call();
+				(new MoneyUpdateEvent($this->engine, $string))->call();
 			}
 
 			if(!is_null($callable)){
@@ -110,8 +110,8 @@ class ParoxityEconAPI{
 	 *
 	 * Money will be null if player is not found in db and float if he exists.
 	 */
-	public function getMoney(string $string, bool $isUUID, callable $callable): void{
-		$this->database->getMoney($string, $isUUID, function(array $rows) use ($callable): void{
+	public function getMoney(string $string, callable $callable): void{
+		$this->database->getMoney($string, function(array $rows) use ($callable): void{
 			empty($rows) ? $callable(null) : $callable((float) $rows[0]["money"]);
 		});
 	}
@@ -205,8 +205,8 @@ class ParoxityEconAPI{
 				$sendersBalance = $sendersBalance - $money;
 
 				// call the events for both the players, serves to update the cache as well
-				(new MoneyUpdateEvent($this->engine, $sendersName, false))->call();
-				(new MoneyUpdateEvent($this->engine, $receiversName, false))->call();
+				(new MoneyUpdateEvent($this->engine, $sendersName))->call();
+				(new MoneyUpdateEvent($this->engine, $receiversName))->call();
 
 				$return = [
 					"data" => [

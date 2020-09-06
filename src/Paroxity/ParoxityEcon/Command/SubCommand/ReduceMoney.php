@@ -56,14 +56,14 @@ class ReduceMoney extends BaseSubCommand{
 			$string = $player->getUniqueId()->toString();
 		}
 
-		$engine->getAPI()->deductMoney($string, $money, $online, function(bool $success) use ($sender, $player, $username, $string, $online, $money): void{
+		$engine->getAPI()->deductMoney($string, $money, function(bool $success) use ($sender, $player, $username, $string, $online, $money): void{
 			if(!$success){
 				$sender->sendMessage("§cPlayer:§4 $username §ccould not be found.");
 
 				return;
 			}
 
-			$this->engine->getAPI()->getMoney($string, $online, function(?float $finalBalance) use ($sender, $player, $online, $username, $money): void{
+			$this->engine->getAPI()->getMoney($string, function(?float $finalBalance) use ($sender, $player, $online, $username, $money): void{
 				$unit = ParoxityEcon::getMonetaryUnit();
 
 				if($online){

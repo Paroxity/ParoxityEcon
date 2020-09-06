@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Paroxity\ParoxityEcon\Database;
 
 use Paroxity\ParoxityEcon\ParoxityEcon;
+use Paroxity\ParoxityEcon\Utils\ParoxityEconUtils;
 use poggit\libasynql\DataConnector;
 use poggit\libasynql\libasynql;
 use poggit\libasynql\SqlError;
@@ -85,122 +86,86 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 	 * Use uuid when player is online and username when player is offline.
 	 */
 
-	public function addMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		if($isUUID){
-			$this->connector->executeChange(self::ADD_BY_UUID,
-				[
-					"uuid"  => $string,
-					"money" => $money,
-					"max"   => ParoxityEcon::getMaxMoney()
-				],
+	public function addMoney(string $string, float $money, ?callable $callable = null): void{
+		$args = [
+			"money" => $money,
+			"max"   => ParoxityEcon::getMaxMoney()
+		];
 
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+		if(ParoxityEconUtils::isValidUUID($string)){
+			$query = self::ADD_BY_UUID;
+			$args["uuid"] = $string;
 		}else{
-			$this->connector->executeChange(self::ADD_BY_USERNAME,
-				[
-					"username" => $string,
-					"money"    => $money,
-					"max"      => ParoxityEcon::getMaxMoney()
-				],
-
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+			$query = self::ADD_BY_USERNAME;
+			$args["username"] = $string;
 		}
+
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+			$callable(-1);
+		});
 	}
 
-	public function deductMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
-		if($isUUID){
-			$this->connector->executeChange(self::DEDUCT_BY_UUID,
-				[
-					"uuid"  => $string,
-					"money" => $money
-				],
+	public function deductMoney(string $string, float $money, ?callable $callable = null): void{
+		$args = [
+			"money" => $money,
+		];
 
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+		if(ParoxityEconUtils::isValidUUID($string)){
+			$query = self::DEDUCT_BY_UUID;
+			$args["uuid"] = $string;
 		}else{
-			$this->connector->executeChange(self::DEDUCT_BY_USERNAME,
-				[
-					"username" => $string,
-					"money"    => $money
-				],
-
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+			$query = self::DEDUCT_BY_USERNAME;
+			$args["username"] = $string;
 		}
+
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+			$callable(-1);
+		});
 	}
 
-	public function setMoney(string $string, float $money, bool $isUUID, ?callable $callable = null): void{
+	public function setMoney(string $string, float $money, ?callable $callable = null): void{
 		if($money < 0){
 			$money = 0;
 		}
 
-		if($isUUID){
-			$this->connector->executeChange(self::SET_BY_UUID,
-				[
-					"uuid"  => $string,
-					"money" => $money,
-					"max"   => ParoxityEcon::getMaxMoney()
-				],
+		$args = [
+			"money" => $money,
+			"max"   => ParoxityEcon::getMaxMoney()
+		];
 
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+		if(ParoxityEconUtils::isValidUUID($string)){
+			$query = self::SET_BY_UUID;
+			$args["uuid"] = $string;
 		}else{
-			$this->connector->executeChange(self::SET_BY_USERNAME,
-				[
-					"username" => $string,
-					"money"    => $money,
-					"max"      => ParoxityEcon::getMaxMoney()
-				],
-
-				$callable,
-
-				function() use ($callable){
-					$callable(-1);
-				}
-			);
+			$query = self::SET_BY_USERNAME;
+			$args["username"] = $string;
 		}
+
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+			$callable(-1);
+		});
 	}
 
-	public function getMoney(string $string, bool $isUUID, callable $callable): void{
-		if($isUUID){
-			$this->connector->executeSelect(self::GET_BY_UUID, ["uuid" => $string], $callable, function() use ($callable){
-				$callable([]);
-			});
+	public function getMoney(string $string, callable $callable): void{
+		if(ParoxityEconUtils::isValidUUID($string)){
+			$query = self::GET_BY_UUID;
+			$args["uuid"] = $string;
 		}else{
-			$this->connector->executeSelect(self::GET_BY_USERNAME, ["username" => $string], $callable, function() use ($callable){
-				$callable([]);
-			});
+			$query = self::GET_BY_USERNAME;
+			$args["username"] = $string;
 		}
+
+		$this->connector->executeSelect($query, $args, $callable, function() use ($callable){
+			$callable([]);
+		});
 	}
 
 	/**
-	 * @see self::GET_TOP_PLAYERS
-	 * @see self::GET_TOP_10_PLAYERS
-	 *
 	 * @param string   $query
 	 * @param callable $callable
+	 *
+	 * @see self::GET_TOP_PLAYERS
+	 * @see self::GET_TOP_10_PLAYERS
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
 		$this->connector->executeSelect($query, [], $callable, function() use ($callable){

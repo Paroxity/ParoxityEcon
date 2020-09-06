@@ -40,7 +40,7 @@ class ParoxityEconListener implements Listener{
 		 */
 		ParoxityEconCache::add(new Cache($player, ParoxityEcon::getDefaultMoney()));
 
-		$this->engine->getAPI()->getMoney($player->getUniqueId()->toString(), true, function(?float $money) use ($player): void{
+		$this->engine->getAPI()->getMoney($player->getUniqueId()->toString(), function(?float $money) use ($player): void{
 			// player exists in db
 			if(!is_null($money)){
 				// player was found so update his balance safely now
