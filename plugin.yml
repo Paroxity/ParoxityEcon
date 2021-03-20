@@ -4,6 +4,7 @@ api: 3.0.0
 version: 1.0.0
 website: https://paroxity.net
 author: ParoxityTeam
+depend: ParoxityVault
 
 permissions:
   paroxityecon:
