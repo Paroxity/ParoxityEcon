@@ -7,12 +7,12 @@ use Paroxity\ParoxityEcon\Cache\ParoxityEconCache;
 use Paroxity\ParoxityEcon\Command\ParoxityEconCommand;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\SingletonTrait;
 use function floatval;
 
 class ParoxityEcon extends PluginBase{
 
-	/** @var self|null */
-	private static $instance = null;
+	use SingletonTrait;
 
 	/** @var string */
 	private static $MONETARY_UNIT = "$";
@@ -25,10 +25,6 @@ class ParoxityEcon extends PluginBase{
 	private $database;
 	/** @var ParoxityEconAPI */
 	private $api;
-
-	public static function getInstance(): ?ParoxityEcon{
-		return self::$instance;
-	}
 
 	public static function getMonetaryUnit(): string{
 		return self::$MONETARY_UNIT;
@@ -43,7 +39,7 @@ class ParoxityEcon extends PluginBase{
 	}
 
 	public function onLoad(){
-		self::$instance = $this;
+		self::setInstance($this);
 	}
 
 	public function onEnable(){
@@ -73,8 +69,7 @@ class ParoxityEcon extends PluginBase{
 	}
 
 	public function onDisable(){
-		self::$instance = null;
-
 		$this->database->close();
+		self::reset();
 	}
 }

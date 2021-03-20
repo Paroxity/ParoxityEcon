@@ -5,41 +5,41 @@ namespace Paroxity\ParoxityEcon\Database;
 
 use Paroxity\ParoxityEcon\ParoxityEcon;
 use Paroxity\ParoxityEcon\Utils\ParoxityEconUtils;
-use poggit\libasynql\DataConnector;
-use poggit\libasynql\libasynql;
+use Paroxity\ParoxityVault\Database\VaultDatabase;
+use Paroxity\ParoxityVault\ParoxityVault;
 use poggit\libasynql\SqlError;
 use function is_null;
 use function strtolower;
 
-final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements ParoxityEconQueryIds{
+final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 
 	/** @var ParoxityEcon */
 	private $engine;
-	/** @var DataConnector */
-	protected $connector;
+
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;
 
-		$this->connector = libasynql::create(
+		$vault = VaultDatabase::getInstance();
+		$vault->get
+		/*$this->getConnector() = libasynql::create(
 			$this->engine,
 			$this->engine->getConfig()->get("database"),
 			[
 				"sqlite" => "stmts/sqlite.sql",
 				"mysql"  => "stmts/mysql.sql"
 			]
-		);
+		);*/
 
-		$this->connector->executeGeneric(self::INIT);
-		$this->connector->waitAll(); // just to be sure, also waiting on startup isn't a big deal
+		$this->getConnector()->executeGeneric(self::INIT);
+		$this->getConnector()->waitAll(); // just to be sure, also waiting on startup isn't a big deal
 
 		$this->engine->getLogger()->debug("Database Initialized.");
 
-		parent::__construct($this->connector);
 	}
 
 	public function close(): void{
-		$this->connector->close();
+		$this->getConnector()->close();
 	}
 
 	/**
@@ -51,7 +51,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 	public function register(string $uuid, string $username): void{
 		$username = strtolower($username);
 
-		$this->connector->executeInsert(self::REGISTER,
+		$this->getConnector()->executeInsert(self::REGISTER,
 			[
 				"uuid"     => $uuid,
 				"username" => $username,
@@ -100,7 +100,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 			$args["username"] = $string;
 		}
 
-		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -118,7 +118,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 			$args["username"] = $string;
 		}
 
-		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -141,7 +141,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 			$args["username"] = $string;
 		}
 
-		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
+		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -155,7 +155,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 			$args["username"] = $string;
 		}
 
-		$this->connector->executeSelect($query, $args, $callable, function() use ($callable){
+		$this->getConnector()->executeSelect($query, $args, $callable, function() use ($callable){
 			$callable([]);
 		});
 	}
@@ -168,7 +168,7 @@ final class ParoxityEconDatabase extends ParoxityEconAwaitDatabase implements Pa
 	 * @see self::GET_TOP_10_PLAYERS
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
-		$this->connector->executeSelect($query, [], $callable, function() use ($callable){
+		$this->getConnector()->executeSelect($query, [], $callable, function() use ($callable){
 			$callable([]);
 		});
 	}
