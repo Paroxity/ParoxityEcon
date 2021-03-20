@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Paroxity\ParoxityEcon;
 
+use CortexPE\Commando\PacketHooker;
 use Paroxity\ParoxityEcon\Cache\ParoxityEconCache;
 use Paroxity\ParoxityEcon\Command\ParoxityEconCommand;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
@@ -56,6 +57,10 @@ class ParoxityEcon extends PluginBase{
 
 		ParoxityEconCache::init($this);
 
+		if(!PacketHooker::isRegistered()){
+			PacketHooker::register($this);
+		}
+
 		$this->getServer()->getPluginManager()->registerEvents(new ParoxityEconListener($this, $this->database), $this);
 		$this->getServer()->getCommandMap()->register("ParoxityEcon", new ParoxityEconCommand($this));
 	}
@@ -69,7 +74,6 @@ class ParoxityEcon extends PluginBase{
 	}
 
 	public function onDisable(){
-		$this->database->close();
 		self::reset();
 	}
 }

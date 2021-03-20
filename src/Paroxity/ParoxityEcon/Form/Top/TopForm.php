@@ -30,7 +30,7 @@ class TopForm extends CustomForm{
 		$i = 1;
 
 		foreach($this->data as $data){
-			$playerName = $data["username"];
+			$playerName = $data["display_name"];
 			$money = $data["money"];
 
 			$text .= "§e$i §l§c»§r §2$playerName §l§b»§r §fwith: §6" . ParoxityEcon::getMonetaryUnit() . $money . "\n";

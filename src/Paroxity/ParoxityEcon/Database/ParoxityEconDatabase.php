@@ -7,39 +7,27 @@ use Paroxity\ParoxityEcon\ParoxityEcon;
 use Paroxity\ParoxityEcon\Utils\ParoxityEconUtils;
 use Paroxity\ParoxityVault\Database\VaultDatabase;
 use Paroxity\ParoxityVault\ParoxityVault;
+use poggit\libasynql\DataConnector;
 use poggit\libasynql\SqlError;
 use function is_null;
 use function strtolower;
 
 final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 
-	/** @var ParoxityEcon */
-	private $engine;
-
+	private ParoxityEcon $engine;
+	private DataConnector $connector;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;
+		$this->connector = ParoxityVault::getInstance()->getDatabase()->getConnector();
 
-		$vault = VaultDatabase::getInstance();
-		$vault->get
-		/*$this->getConnector() = libasynql::create(
-			$this->engine,
-			$this->engine->getConfig()->get("database"),
-			[
-				"sqlite" => "stmts/sqlite.sql",
-				"mysql"  => "stmts/mysql.sql"
-			]
-		);*/
+		VaultDatabase::loadQueryFile($engine->getResource("stmts/sqlite.sql"), VaultDatabase::TYPE_SQLITE);
+		VaultDatabase::loadQueryFile($engine->getResource("stmts/mysql.sql"));
 
-		$this->getConnector()->executeGeneric(self::INIT);
-		$this->getConnector()->waitAll(); // just to be sure, also waiting on startup isn't a big deal
+		$this->connector->executeGeneric(self::INIT);
+		$this->connector->waitAll(); // just to be sure, also waiting on startup isn't a big deal
 
 		$this->engine->getLogger()->debug("Database Initialized.");
-
-	}
-
-	public function close(): void{
-		$this->getConnector()->close();
 	}
 
 	/**
@@ -51,7 +39,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 	public function register(string $uuid, string $username): void{
 		$username = strtolower($username);
 
-		$this->getConnector()->executeInsert(self::REGISTER,
+		$this->connector->executeInsert(self::REGISTER,
 			[
 				"uuid"     => $uuid,
 				"username" => $username,
@@ -100,7 +88,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			$args["username"] = $string;
 		}
 
-		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -118,7 +106,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			$args["username"] = $string;
 		}
 
-		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -141,7 +129,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			$args["username"] = $string;
 		}
 
-		$this->getConnector()->executeChange($query, $args, $callable, function() use ($callable){
+		$this->connector->executeChange($query, $args, $callable, function() use ($callable){
 			$callable(-1);
 		});
 	}
@@ -155,7 +143,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			$args["username"] = $string;
 		}
 
-		$this->getConnector()->executeSelect($query, $args, $callable, function() use ($callable){
+		$this->connector->executeSelect($query, $args, $callable, function() use ($callable){
 			$callable([]);
 		});
 	}
@@ -168,7 +156,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 	 * @see self::GET_TOP_10_PLAYERS
 	 */
 	public function getTopPlayers(string $query, callable $callable): void{
-		$this->getConnector()->executeSelect($query, [], $callable, function() use ($callable){
+		$this->connector->executeSelect($query, [], $callable, function() use ($callable){
 			$callable([]);
 		});
 	}

@@ -4,20 +4,19 @@
 -- #  {init
 CREATE TABLE IF NOT EXISTS economy (
   uuid      VARCHAR(36) PRIMARY KEY,
-  username  VARCHAR(16),
-  money     FLOAT DEFAULT 0
+  money     FLOAT DEFAULT 0,
+  FOREIGN KEY (uuid) REFERENCES records(uuid)
 );
 -- #  }
 
 -- #  {register
 -- #    :uuid       string
--- #    :username   string
 -- #    :money      float
 INSERT INTO economy (
-  uuid, username, money
+  uuid, money
 )
 VALUES (
-  :uuid, :username, :money
+  :uuid, :money
 )
 -- #  }
 
@@ -26,7 +25,7 @@ VALUES (
 -- #        :username   string
 -- #        :money      float
 -- #        :max        float
-UPDATE economy SET money = LEAST(money + :money, :max) WHERE username = LOWER(:username);
+UPDATE economy SET money = LEAST(money + :money, :max) WHERE uuid = (SELECT uuid FROM records WHERE username = LOWER(:username));
 -- #    }
 
 -- #    {by-uuid
@@ -41,7 +40,7 @@ UPDATE economy SET money = LEAST(money + :money, :max) WHERE uuid = :uuid;
 -- #    {by-username
 -- #        :username   string
 -- #        :money      float
-UPDATE economy SET money = GREATEST(money - :money, 0) WHERE username = LOWER(:username);
+UPDATE economy SET money = GREATEST(money - :money, 0) WHERE uuid = (SELECT uuid FROM records WHERE username = LOWER(:username));
 -- #    }
 
 -- #    {by-uuid
@@ -56,7 +55,7 @@ UPDATE economy SET money = GREATEST(money - :money, 0) WHERE uuid = :uuid;
 -- #        :username   string
 -- #        :money      float
 -- #        :max        float
-UPDATE economy SET money = LEAST(:money, :max) WHERE username = LOWER(:username);
+UPDATE economy SET money = LEAST(:money, :max) WHERE uuid = (SELECT uuid FROM records WHERE username = LOWER(:username));
 -- #    }
 
 -- #    {by-uuid
@@ -70,7 +69,7 @@ UPDATE economy SET money = LEAST(:money, :max) WHERE uuid = :uuid;
 -- #  {get
 -- #    {by-username
 -- #      :username string
-SELECT money FROM economy WHERE username = LOWER(:username);
+SELECT money FROM economy WHERE uuid = (SELECT uuid FROM records WHERE username = LOWER(:username));
 -- #    }
 
 -- #    {by-uuid
@@ -79,11 +78,17 @@ SELECT money FROM economy WHERE uuid = :uuid;
 -- #    }
 
 -- #    {top
-SELECT * FROM economy ORDER BY money DESC;
+SELECT economy.money, records.username, records.display_name
+FROM economy, records
+WHERE economy.uuid = records.uuid
+ORDER BY economy.money DESC;
 -- #    }
 
 -- #    {top10
-SELECT * FROM economy ORDER BY money DESC LIMIT 10;
+SELECT economy.money, records.username, records.display_name
+FROM economy, records
+WHERE economy.uuid = records.uuid
+ORDER BY economy.money DESC LIMIT 10;
 -- #    }
 -- #  }
 

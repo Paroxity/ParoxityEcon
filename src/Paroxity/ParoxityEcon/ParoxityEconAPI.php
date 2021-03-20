@@ -6,6 +6,7 @@ namespace Paroxity\ParoxityEcon;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use Paroxity\ParoxityEcon\Database\ParoxityEconQueryIds;
 use Paroxity\ParoxityEcon\Event\MoneyUpdateEvent;
+use Paroxity\ParoxityVault\ParoxityVault;
 use pocketmine\utils\Utils;
 use SOFe\AwaitGenerator\Await;
 use function is_array;
@@ -152,11 +153,10 @@ class ParoxityEconAPI{
 					"data"       => []
 				];
 
-				$engine = $this->engine;
-				$database = $engine->getDatabase();
+				$vaultDatabase = ParoxityVault::getInstance()->getDatabase();
 
 				// gets senders money and check if he has enough money
-				$sendersData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, ["username" => $sendersName]);
+				$sendersData = yield $vaultDatabase->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, ["username" => $sendersName]);
 
 				if(empty($sendersData)){
 					$return["error_code"] = self::ERROR_SENDER_NOT_FOUND;
@@ -179,7 +179,7 @@ class ParoxityEconAPI{
 				];
 
 				// add the money to the targets balance
-				$result = yield $database->asyncChange(ParoxityEconQueryIds::ADD_BY_USERNAME, $lookup);
+				$result = yield $vaultDatabase->asyncChange(ParoxityEconQueryIds::ADD_BY_USERNAME, $lookup);
 
 				if($result === 0){
 					$return["error_code"] = self::ERROR_RECEIVER_NOT_FOUND;
@@ -188,11 +188,11 @@ class ParoxityEconAPI{
 				}
 
 				// before adding to targets balance, deduct from senders first
-				$result = yield $database->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, ["username" => $sendersName, "money" => $money]);
+				$result = yield $vaultDatabase->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, ["username" => $sendersName, "money" => $money]);
 
 				if($result === 0){
 					// remove the money that was added to targets balance
-					yield $database->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, $lookup);
+					yield $vaultDatabase->asyncChange(ParoxityEconQueryIds::DEDUCT_BY_USERNAME, $lookup);
 					$return["error_code"] = self::ERROR_CAUSE_UNKNOWN;
 
 					return $return;
@@ -200,7 +200,7 @@ class ParoxityEconAPI{
 
 				// target balance was added and senders money was deducted. proceed...
 				// get targets updated balance
-				$receiversData = yield $database->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, $lookup);
+				$receiversData = yield $vaultDatabase->asyncSelect(ParoxityEconQueryIds::GET_BY_USERNAME, $lookup);
 				$receiversBalance = $receiversData[0]["money"];
 				$sendersBalance = $sendersBalance - $money;
 
