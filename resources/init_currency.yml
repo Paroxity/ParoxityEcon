@@ -1,0 +1,18 @@
+---
+currencies:
+- id: "usd"
+  name: "US Dollars"
+  is_default: true
+  symbol: "$"
+  symbol_position: "start"
+  starting_amount: 0
+  maximum_amount: 100000
+
+- id: "coins"
+  name: "Coins"
+  is_default: false
+  symbol: "coins"
+  symbol_position: "end"
+  starting_amount: 10
+  maximum_amount: 1000
+...

@@ -24,7 +24,8 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 		VaultDatabase::loadQueryFile($engine->getResource("stmts/sqlite.sql"), VaultDatabase::TYPE_SQLITE);
 		VaultDatabase::loadQueryFile($engine->getResource("stmts/mysql.sql"));
 
-		$this->connector->executeGeneric(self::INIT);
+		$this->connector->executeGeneric(self::CURRENCY_INIT);
+		$this->connector->executeGeneric(self::ECO_INIT);
 		$this->connector->waitAll(); // just to be sure, also waiting on startup isn't a big deal
 
 		$this->engine->getLogger()->debug("Database Initialized.");
@@ -39,7 +40,7 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 	public function register(string $uuid, string $username): void{
 		$username = strtolower($username);
 
-		$this->connector->executeInsert(self::REGISTER,
+		$this->connector->executeInsert(self::ECO_REGISTER,
 			[
 				"uuid"     => $uuid,
 				"username" => $username,
@@ -160,4 +161,8 @@ final class ParoxityEconDatabase implements ParoxityEconQueryIds{
 			$callable([]);
 		});
 	}
+
+	// CURRENCY
+
+
 }

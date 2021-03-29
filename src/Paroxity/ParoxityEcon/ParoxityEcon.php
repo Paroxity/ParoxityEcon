@@ -6,6 +6,7 @@ namespace Paroxity\ParoxityEcon;
 use CortexPE\Commando\PacketHooker;
 use Paroxity\ParoxityEcon\Cache\ParoxityEconCache;
 use Paroxity\ParoxityEcon\Command\ParoxityEconCommand;
+use Paroxity\ParoxityEcon\Currency\CurrencyManager;
 use Paroxity\ParoxityEcon\Database\ParoxityEconDatabase;
 use pocketmine\plugin\PluginBase;
 use function floatval;
@@ -44,7 +45,7 @@ class ParoxityEcon extends PluginBase{
 	public function onEnable(){
 		$this->saveDefaultConfig();
 
-		$this->saveResource("data/dummy.txt");
+		$this->saveResource("init_currency.yml", true);
 
 		self::$MONETARY_UNIT = $this->getConfig()->get("unit", "$");
 		self::$MAX_MONEY = floatval($this->getConfig()->get("max-money", 50000000.0));
@@ -52,6 +53,9 @@ class ParoxityEcon extends PluginBase{
 
 		$this->database = new ParoxityEconDatabase($this);
 		$this->api = new ParoxityEconAPI($this, $this->database);
+
+		$cm = new CurrencyManager($this);
+		$cm->init();
 
 		ParoxityEconCache::init($this);
 
