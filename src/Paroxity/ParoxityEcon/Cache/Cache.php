@@ -7,10 +7,8 @@ use pocketmine\Player;
 
 class Cache{
 
-	/** @var Player */
-	private $player;
-	/** @var float */
-	private $money;
+	private Player $player;
+	private float $money;
 
 	public function __construct(Player $player, float $money){
 		$this->player = $player;

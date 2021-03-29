@@ -11,12 +11,9 @@ use pocketmine\utils\UUID;
 
 class MoneyUpdateEvent extends PluginEvent{
 
-	/** @var ParoxityEcon */
-	private $engine;
-	/** @var string */
-	private $name;
-	/** @var Player|null */
-	private $player = null;
+	private ParoxityEcon $engine;
+	private string $name;
+	private ?Player $player = null;
 
 	public function __construct(ParoxityEcon $engine, string $name){
 		$this->engine = $engine;

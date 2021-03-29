@@ -11,8 +11,7 @@ use function is_null;
 
 class SeeMoney extends BaseSubCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

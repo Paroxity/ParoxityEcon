@@ -10,8 +10,7 @@ use pocketmine\command\CommandSender;
 
 class TopMoney extends BaseSubCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

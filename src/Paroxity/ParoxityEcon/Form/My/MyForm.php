@@ -11,8 +11,7 @@ use pocketmine\Player;
 
 class MyForm extends CustomForm{
 
-	/** @var float */
-	private $money;
+	private float $money;
 
 	public function __construct(float $money){
 		$this->money = $money;

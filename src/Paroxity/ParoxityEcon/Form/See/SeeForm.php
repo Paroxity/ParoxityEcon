@@ -14,8 +14,7 @@ use function trim;
 
 class SeeForm extends CustomForm{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine, array $labels = []){
 		$this->engine = $engine;

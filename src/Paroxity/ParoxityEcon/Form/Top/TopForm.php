@@ -11,8 +11,7 @@ use pocketmine\Player;
 
 class TopForm extends CustomForm{
 
-	/** @var array */
-	private $data;
+	private array $data = [];
 
 	public function __construct(array $data){
 		$this->data = $data;

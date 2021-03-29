@@ -25,10 +25,8 @@ class ParoxityEconAPI{
 	/** @var self|null */
 	private static $instance = null;
 
-	/** @var ParoxityEcon */
-	private $engine;
-	/** @var ParoxityEconDatabase */
-	private $database;
+	private ParoxityEcon $engine;
+	private ParoxityEconDatabase $database;
 
 	public function __construct(ParoxityEcon $engine, ParoxityEconDatabase $database){
 		$this->engine = $engine;
@@ -37,10 +35,7 @@ class ParoxityEconAPI{
 		self::$instance = $this;
 	}
 
-	/**
-	 * @return ParoxityEconAPI|null
-	 */
-	public static function getInstance(): ?ParoxityEconAPI{
+	public static function getInstance(): ?self{
 		return self::$instance;
 	}
 

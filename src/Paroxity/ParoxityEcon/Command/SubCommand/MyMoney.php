@@ -11,8 +11,7 @@ use pocketmine\Player;
 
 class MyMoney extends BaseSubCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

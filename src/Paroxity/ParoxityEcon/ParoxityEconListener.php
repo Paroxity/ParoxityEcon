@@ -14,10 +14,8 @@ use function is_null;
 
 class ParoxityEconListener implements Listener{
 
-	/** @var ParoxityEcon */
-	private $engine;
-	/** @var ParoxityEconDatabase */
-	private $database;
+	private ParoxityEcon $engine;
+	private ParoxityEconDatabase $database;
 
 	public function __construct(ParoxityEcon $engine, ParoxityEconDatabase $database){
 		$this->engine = $engine;

@@ -13,8 +13,7 @@ use function is_null;
 
 class Set extends BaseSubCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

@@ -20,8 +20,7 @@ use pocketmine\Player;
 
 class ParoxityEconCommand extends BaseCommand implements PluginIdentifiableCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

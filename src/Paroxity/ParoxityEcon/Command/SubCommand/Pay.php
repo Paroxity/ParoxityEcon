@@ -15,8 +15,7 @@ use function floatval;
 
 class Pay extends BaseSubCommand{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;

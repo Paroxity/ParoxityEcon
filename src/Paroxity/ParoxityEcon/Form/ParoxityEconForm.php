@@ -16,8 +16,7 @@ use function is_null;
 
 class ParoxityEconForm extends MenuForm{
 
-	/** @var ParoxityEcon */
-	private $engine;
+	private ParoxityEcon $engine;
 
 	public function __construct(ParoxityEcon $engine){
 		$this->engine = $engine;
