@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS economy (
   uuid      VARCHAR(36) PRIMARY KEY,
   money     FLOAT DEFAULT 0,
-  FOREIGN KEY (uuid) REFERENCES records(uuid)
+  FOREIGN KEY (uuid) REFERENCES records(uuid) ON DELETE CASCADE
 );
 -- #  }
 
