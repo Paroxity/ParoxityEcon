@@ -6,8 +6,8 @@ projects:
   ParoxityEcon:
     path: ""
     libs:
-    - src: ParoxityTeam/Commando/Commando
-      version: ^2.1.0
+    - src: Paroxity/Commando/Commando
+      version: ^2.1.2
     - src: poggit/libasynql/libasynql
       version: ^3.3.0
     - src: dktapps-pm-pl/pmforms/pmforms
